@@ -115,12 +115,8 @@
         </div>
 
         <div class="card">
-            <h2>🍲 晚餐酸菜魚湯底備料 <span class="text-xs">(含1.5倍鍋量 + 動態加湯)</span></h2>
-            <div id="soupList" class="grid-3" style="margin-bottom: 12px;"></div>
-            <div class="sub-card" style="margin-bottom: 0;">
-                <label style="color:#fcd34d; margin-bottom:8px;">🧂 湯底共用辛香/調味料統整</label>
-                <div id="commonSeasoning" class="grid-4 text-sm" style="text-align:center;"></div>
-            </div>
+            <h2>🍲 晚餐酸菜魚湯底備料 <span class="text-xs">(各湯底獨立計算，分開烹煮)</span></h2>
+            <div id="soupList" class="grid-3"></div>
         </div>
 
         <div class="card">
@@ -221,39 +217,48 @@
             }
             document.getElementById('breakfastList').innerHTML = breakfastHtml;
 
-            // 2. 酸菜魚 (順序調整：辣左、酸中、清右)
+            // 2. 酸菜魚 (各湯底獨立計算鹽巴與大骨粉，分開顯示)
             const prepSpicy = getPreparedSoupPortions(soupSpicy);
             const prepAcid = getPreparedSoupPortions(soupAcid);
             const prepClear = getPreparedSoupPortions(soupClear);
-            const totalSalt = (prepSpicy * 7) + (prepAcid * 7) + (prepClear * 7);
-            const totalBonePowder = (prepSpicy * 3) + (prepAcid * 3) + (prepClear * 5);
 
             document.getElementById('soupList').innerHTML = `
                 <div class="sub-card" style="margin-bottom:0;">
-                    <div class="text-amber font-bold" style="margin-bottom:4px;">辣湯 (點${soupSpicy}份)</div>
+                    <div class="text-amber font-bold" style="margin-bottom:4px;">🔥 辣湯 (點${soupSpicy}份)</div>
                     <div class="text-sm">需備湯：<span class="font-bold">${prepSpicy}份</span></div>
-                    <div class="text-xs" style="margin-top:2px;">水:${prepSpicy*1000}g|醬油:${prepSpicy*20}g|底料:${prepSpicy}塊</div>
+                    <div class="text-xs" style="margin-top:4px; line-height: 1.5;">
+                        • 水：${prepSpicy * 1000}g<br>
+                        • 醬油：${prepSpicy * 20}g<br>
+                        • 火鍋底料：${prepSpicy} 塊<br>
+                        • 鹽巴：<span class="text-amber font-bold">${prepSpicy * 7}g</span><br>
+                        • 大骨粉：<span class="text-amber font-bold">${prepSpicy * 3}g</span>
+                    </div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0;">
-                    <div class="text-amber font-bold" style="margin-bottom:4px;">酸湯 (點${soupAcid}份)</div>
+                    <div class="text-amber font-bold" style="margin-bottom:4px;">🍋 酸湯 (點${soupAcid}份)</div>
                     <div class="text-sm">需備湯：<span class="font-bold">${prepAcid}份</span></div>
-                    <div class="text-xs" style="margin-top:2px;">水:${prepAcid*1000}g|酸醬:${prepAcid*40}g|白醋:${prepAcid*30}g|米酒:${prepAcid*15}g</div>
+                    <div class="text-xs" style="margin-top:4px; line-height: 1.5;">
+                        • 水：${prepAcid * 1000}g<br>
+                        • 酸菜醬：${prepAcid * 40}g<br>
+                        • 白醋：${prepAcid * 30}g<br>
+                        • 米酒：${prepAcid * 15}g<br>
+                        • 鹽巴：<span class="text-amber font-bold">${prepAcid * 7}g</span><br>
+                        • 大骨粉：<span class="text-amber font-bold">${prepAcid * 3}g</span>
+                    </div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0;">
-                    <div class="text-amber font-bold" style="margin-bottom:4px;">清湯 (點${soupClear}份)</div>
+                    <div class="text-amber font-bold" style="margin-bottom:4px;">🥣 清湯 (點${soupClear}份)</div>
                     <div class="text-sm">需備湯：<span class="font-bold">${prepClear}份</span></div>
-                    <div class="text-xs" style="margin-top:2px;">水:${prepClear*1000}g|基礎調味</div>
+                    <div class="text-xs" style="margin-top:4px; line-height: 1.5;">
+                        • 水：${prepClear * 1000}g<br>
+                        • 基礎調味<br>
+                        • 鹽巴：<span class="text-amber font-bold">${prepClear * 7}g</span><br>
+                        • 大骨粉：<span class="text-amber font-bold">${prepClear * 5}g</span>
+                    </div>
                 </div>
             `;
 
-            document.getElementById('commonSeasoning').innerHTML = `
-                <div style="background:#1e293b; padding:8px; border-radius:6px;"><span class="text-xs">鹽巴總計</span><br><span class="text-amber font-bold">${totalSalt} g</span></div>
-                <div style="background:#1e293b; padding:8px; border-radius:6px;"><span class="text-xs">大骨粉總計</span><br><span class="text-amber font-bold">${totalBonePowder} g</span></div>
-                <div style="background:#1e293b; padding:8px; border-radius:6px;"><span class="text-xs">酸菜醬總計</span><br><span class="text-amber font-bold">${prepAcid * 40} g</span></div>
-                <div style="background:#1e293b; padding:8px; border-radius:6px;"><span class="text-xs">火鍋底料</span><br><span class="text-amber font-bold">${prepSpicy} 塊</span></div>
-            `;
-
-            // 3. 菜盆 (加入五人菜盆：大盆基礎上南瓜+1、蕃茄+1、蘿蔔+1)
+            // 3. 菜盆
             const vegCabbage = (basinFive * 150) + (basinLarge * 150) + (basinSmall * 100) + (basinVegan * 80);
             const vegBokChoy = (basinFive * 80) + (basinLarge * 80) + (basinSmall * 40) + (basinVegan * 30);
             const vegMushroom = (basinFive * 2) + (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
@@ -274,7 +279,7 @@
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">白蘿蔔</span><br><span class="font-bold" style="font-size:15px;">${vegRadish} 片</span></div>
             `;
 
-            // 4. 下午茶與晚餐飲料
+            // 4. 飲料
             const afDrinkCC = getTieredDrinkCC(todayGuests);
 
             document.getElementById('drinkList').innerHTML = `
