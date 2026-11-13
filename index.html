@@ -31,6 +31,24 @@
         .text-xs { font-size: 11px; color: #94a3b8; }
         .font-bold { font-weight: bold; }
         .text-amber { color: #fbbf24; }
+
+        /* 菜盆卡片點擊展開樣式 */
+        .basin-card { cursor: pointer; transition: border-color 0.2s; }
+        .basin-card:hover { border-color: #475569; }
+        .basin-card.active { border-color: #fbbf24; }
+        .basin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; user-select: none; }
+        .basin-header label { margin-bottom: 0; cursor: pointer; }
+        .basin-toggle-icon { font-size: 10px; color: #fbbf24; }
+        .basin-detail {
+            display: none;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #334155;
+            font-size: 11px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        .basin-card.active .basin-detail { display: block; }
     </style>
 </head>
 <body>
@@ -89,35 +107,86 @@
                 </div>
             </div>
 
-            <div class="grid-4">
-                <div class="sub-card" style="margin-bottom:0;">
-                    <label>五人菜盆</label>
+            <div class="grid-4" style="align-items: start;">
+                <div class="sub-card basin-card" style="margin-bottom:0;" onclick="toggleBasin(this)">
+                    <div class="basin-header">
+                        <label>五人菜盆</label>
+                        <span class="basin-toggle-icon">▼ 明細</span>
+                    </div>
                     <input type="number" id="basinFive" min="0" value="0" oninput="calculate()">
+                    <div class="basin-detail">
+                        <span class="text-amber font-bold">【單份數量】</span><br>
+                        <span class="text-xs" style="color: #fb7185;">⚠️ 清單待確認</span>
+                    </div>
                 </div>
-                <div class="sub-card" style="margin-bottom:0;">
-                    <label>大菜盆 (3-4人)</label>
-                    <input type="number" id="basinLarge" min="0" value="4" oninput="calculate()">
-                </div>
-                <div class="sub-card" style="margin-bottom:0;">
-                    <label>小菜盆 (2人)</label>
-                    <input type="number" id="basinSmall" min="0" value="2" oninput="calculate()">
-                </div>
-                <div class="sub-card" style="margin-bottom:0;">
-                    <label>素菜盆 (額外)</label>
-                    <input type="number" id="basinVegan" min="0" value="0" oninput="calculate()">
-                </div>
-            </div>
 
-            <!-- 下拉選單：單份菜盆食材速查 -->
-            <div class="sub-card" style="margin-top: 12px; margin-bottom:0; background-color: #1e293b;">
-                <label style="color: #fcd34d; margin-bottom:6px;">📖 單份菜盆食材明細速查 (下拉檢視)</label>
-                <select id="basinSelector" onchange="showBasinDetail()">
-                    <option value="five">🟢 五人菜盆 (點此檢視單份明細)</option>
-                    <option value="large">🟡 大菜盆 (3-4人) (點此檢視單份明細)</option>
-                    <option value="small">🟠 小菜盆 (2人) (點此檢視單份明細)</option>
-                    <option value="vegan">🟣 素菜盆 (額外) (點此檢視單份明細)</option>
-                </select>
-                <div id="basinDetailDisplay" class="text-xs" style="margin-top: 8px; line-height: 1.6; color: #94a3b8; background: #0f172a; padding: 8px; border-radius: 6px;"></div>
+                <div class="sub-card basin-card" style="margin-bottom:0;" onclick="toggleBasin(this)">
+                    <div class="basin-header">
+                        <label>大菜盆 (3-4人)</label>
+                        <span class="basin-toggle-icon">▼ 明細</span>
+                    </div>
+                    <input type="number" id="basinLarge" min="0" value="4" oninput="calculate()">
+                    <div class="basin-detail">
+                        <span class="text-amber font-bold">【單份數量】</span><br>
+                        • 高麗菜：150g<br>
+                        • 青江菜：80g<br>
+                        • 香菇：2朵<br>
+                        • 南瓜：5片<br>
+                        • 牛番茄：2片<br>
+                        • 金針菇：1大<br>
+                        • 凍豆腐：4個<br>
+                        • 蒟蒻捲：4個<br>
+                        • 蘿蔔：4片<br>
+                        • 川耳：4個
+                    </div>
+                </div>
+
+                <div class="sub-card basin-card" style="margin-bottom:0;" onclick="toggleBasin(this)">
+                    <div class="basin-header">
+                        <label>小菜盆 (2人)</label>
+                        <span class="basin-toggle-icon">▼ 明細</span>
+                    </div>
+                    <input type="number" id="basinSmall" min="0" value="2" oninput="calculate()">
+                    <div class="basin-detail">
+                        <span class="text-amber font-bold">【單份數量】</span><br>
+                        • 高麗菜：100g<br>
+                        • 青江菜：40g<br>
+                        • 香菇：1朵<br>
+                        • 南瓜：3片<br>
+                        • 牛番茄：1片<br>
+                        • 金針菇：1小<br>
+                        • 凍豆腐：2個<br>
+                        • 蒟蒻捲：2個<br>
+                        • 蘿蔔：2片<br>
+                        • 川耳：3個
+                    </div>
+                </div>
+
+                <div class="sub-card basin-card" style="margin-bottom:0;" onclick="toggleBasin(this)">
+                    <div class="basin-header">
+                        <label>素菜盆 (額外)</label>
+                        <span class="basin-toggle-icon">▼ 明細</span>
+                    </div>
+                    <input type="number" id="basinVegan" min="0" value="0" oninput="calculate()">
+                    <div class="basin-detail">
+                        <span class="text-amber font-bold">【單份數量】</span><br>
+                        • 高麗菜：80g<br>
+                        • 青江菜：35g<br>
+                        • 娃娃菜：1個<br>
+                        • 香菇：1朵<br>
+                        • 南瓜：3片<br>
+                        • 牛番茄：1片<br>
+                        • 金針菇：1小<br>
+                        • 凍豆腐：2個<br>
+                        • 蒟蒻捲：2個<br>
+                        • 蘿蔔：2片<br>
+                        • 川耳：3個<br>
+                        • 雪白菇：1朵<br>
+                        • 冬粉：1個<br>
+                        • 素火鍋料：4種各1<br>
+                        • 芋頭：2個
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -177,26 +246,17 @@
             basinLarge: 4,
             basinSmall: 2,
             basinVegan: 0,
-            riceCups: 2,
-            basinSelector: 'five'
+            riceCups: 2
         };
 
-        const basinDetails = {
-            five: "高麗菜: 150g | 青江菜: 80g | 香菇: 2朵 | 南瓜: 6片 | 牛蕃茄: 3片 | 金針菇(大): 1片 | 白蘿蔔: 5片",
-            large: "高麗菜: 150g | 青江菜: 80g | 香菇: 2朵 | 南瓜: 5片 | 牛蕃茄: 2片 | 金針菇(大): 1片 | 白蘿蔔: 4片",
-            small: "高麗菜: 100g | 青江菜: 40g | 香菇: 1朵 | 南瓜: 3片 | 牛蕃茄: 1片 | 金針菇(小): 1片 | 白蘿蔔: 2片",
-            vegan: "高麗菜: 80g | 青江菜: 30g | 香菇: 1朵 | 南瓜: 3片 | 牛蕃茄: 1片 | 金針菇(小): 1片 | 白蘿蔔: 2片"
-        };
-
-        function showBasinDetail() {
-            const selectEl = document.getElementById('basinSelector');
-            const displayEl = document.getElementById('basinDetailDisplay');
-            const val = selectEl.value;
-            displayEl.innerHTML = `<span class="text-amber font-bold">單份明細：</span> ${basinDetails[val]}`;
-            // 順便儲存下拉選單狀態
-            const currentData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            currentData.basinSelector = val;
-            saveData(currentData);
+        function toggleBasin(cardEl) {
+            cardEl.classList.toggle('active');
+            const icon = cardEl.querySelector('.basin-toggle-icon');
+            if (cardEl.classList.contains('active')) {
+                icon.textContent = '▲ 收合';
+            } else {
+                icon.textContent = '▼ 明細';
+            }
         }
 
         function loadSavedData() {
@@ -214,7 +274,6 @@
             } catch (e) {
                 console.error('讀取記憶失敗:', e);
             }
-            showBasinDetail();
         }
 
         function saveData(data) {
@@ -254,8 +313,7 @@
                 basinLarge: parseInt(document.getElementById('basinLarge').value) || 0,
                 basinSmall: parseInt(document.getElementById('basinSmall').value) || 0,
                 basinVegan: parseInt(document.getElementById('basinVegan').value) || 0,
-                riceCups: parseFloat(document.getElementById('riceCups').value) || 0,
-                basinSelector: document.getElementById('basinSelector').value
+                riceCups: parseFloat(document.getElementById('riceCups').value) || 0
             };
 
             saveData(currentData);
@@ -423,7 +481,6 @@
                     const el = document.getElementById(key);
                     if (el) el.value = defaultValues[key];
                 });
-                showBasinDetail();
                 calculate();
             }
         }
