@@ -38,7 +38,7 @@
         <div class="max-w flex-between">
             <div>
                 <h1>🏕️ 露營區智慧備料計算機</h1>
-                <p class="text-xs">營區專用 · 即時換算</p>
+                <p class="text-xs">營區專用 · 自動記憶數據</p>
             </div>
             <button onclick="resetAll()" class="btn-danger">🗑️ 重置</button>
         </div>
@@ -132,6 +132,46 @@
     </div>
 
     <script>
+        const STORAGE_KEY = 'camp_calculator_data_v1';
+
+        const defaultValues = {
+            yesterdayGuests: 4,
+            todayGuests: 18,
+            todayTents: 6,
+            soupSpicy: 2,
+            soupAcid: 3,
+            soupClear: 1,
+            basinFive: 0,
+            basinLarge: 4,
+            basinSmall: 2,
+            basinVegan: 0
+        };
+
+        function loadSavedData() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    Object.keys(defaultValues).forEach(key => {
+                        const el = document.getElementById(key);
+                        if (el && data[key] !== undefined) {
+                            el.value = data[key];
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error('讀取記憶失敗:', e);
+            }
+        }
+
+        function saveData(data) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {
+                console.error('儲存記憶失敗:', e);
+            }
+        }
+
         function getTieredDrinkCC(guests) {
             if (guests <= 0) return 0;
             if (guests < 15) return 2000;
@@ -150,16 +190,27 @@
         }
 
         function calculate() {
-            const yesterdayGuests = parseInt(document.getElementById('yesterdayGuests').value) || 0;
-            const todayGuests = parseInt(document.getElementById('todayGuests').value) || 0;
-            const todayTents = parseInt(document.getElementById('todayTents').value) || 0;
-            const soupSpicy = parseInt(document.getElementById('soupSpicy').value) || 0;
-            const soupAcid = parseInt(document.getElementById('soupAcid').value) || 0;
-            const soupClear = parseInt(document.getElementById('soupClear').value) || 0;
-            const basinFive = parseInt(document.getElementById('basinFive').value) || 0;
-            const basinLarge = parseInt(document.getElementById('basinLarge').value) || 0;
-            const basinSmall = parseInt(document.getElementById('basinSmall').value) || 0;
-            const basinVegan = parseInt(document.getElementById('basinVegan').value) || 0;
+            const currentData = {
+                yesterdayGuests: parseInt(document.getElementById('yesterdayGuests').value) || 0,
+                todayGuests: parseInt(document.getElementById('todayGuests').value) || 0,
+                todayTents: parseInt(document.getElementById('todayTents').value) || 0,
+                soupSpicy: parseInt(document.getElementById('soupSpicy').value) || 0,
+                soupAcid: parseInt(document.getElementById('soupAcid').value) || 0,
+                soupClear: parseInt(document.getElementById('soupClear').value) || 0,
+                basinFive: parseInt(document.getElementById('basinFive').value) || 0,
+                basinLarge: parseInt(document.getElementById('basinLarge').value) || 0,
+                basinSmall: parseInt(document.getElementById('basinSmall').value) || 0,
+                basinVegan: parseInt(document.getElementById('basinVegan').value) || 0
+            };
+
+            // 每次變動即自動存入瀏覽器記憶
+            saveData(currentData);
+
+            const {
+                yesterdayGuests, todayGuests, todayTents,
+                soupSpicy, soupAcid, soupClear,
+                basinFive, basinLarge, basinSmall, basinVegan
+            } = currentData;
 
             const warningEl = document.getElementById('tentWarning');
             warningEl.style.display = todayTents > 20 ? 'block' : 'none';
@@ -217,7 +268,7 @@
             }
             document.getElementById('breakfastList').innerHTML = breakfastHtml;
 
-            // 2. 酸菜魚 (各湯底獨立計算鹽巴與大骨粉，分開顯示)
+            // 2. 酸菜魚
             const prepSpicy = getPreparedSoupPortions(soupSpicy);
             const prepAcid = getPreparedSoupPortions(soupAcid);
             const prepClear = getPreparedSoupPortions(soupClear);
@@ -299,22 +350,20 @@
         }
 
         function resetAll() {
-            if (confirm("確定要重置嗎？")) {
-                document.getElementById('yesterdayGuests').value = 4;
-                document.getElementById('todayGuests').value = 18;
-                document.getElementById('todayTents').value = 6;
-                document.getElementById('soupSpicy').value = 2;
-                document.getElementById('soupAcid').value = 3;
-                document.getElementById('soupClear').value = 1;
-                document.getElementById('basinFive').value = 0;
-                document.getElementById('basinLarge').value = 4;
-                document.getElementById('basinSmall').value = 2;
-                document.getElementById('basinVegan').value = 0;
+            if (confirm("確定要清空記憶並重置為預設值嗎？")) {
+                localStorage.removeItem(STORAGE_KEY);
+                Object.keys(defaultValues).forEach(key => {
+                    const el = document.getElementById(key);
+                    if (el) el.value = defaultValues[key];
+                });
                 calculate();
             }
         }
 
-        window.onload = calculate;
+        window.onload = function() {
+            loadSavedData();
+            calculate();
+        };
     </script>
 </body>
 </html>
