@@ -125,7 +125,7 @@
         </div>
 
         <div class="card">
-            <h2>🧃 全天飲料備料清單 <span class="text-xs">(依實戰級距換算)</span></h2>
+            <h2>🧃 下午茶與晚餐飲料備料 <span class="text-xs">(含糖漿/奶精粉配方)</span></h2>
             <div id="drinkList" class="grid-2"></div>
         </div>
 
@@ -203,7 +203,6 @@
                 basinVegan: parseInt(document.getElementById('basinVegan').value) || 0
             };
 
-            // 每次變動即自動存入瀏覽器記憶
             saveData(currentData);
 
             const {
@@ -225,7 +224,7 @@
                 sumStatusEl.className = "badge badge-danger";
             }
 
-            // 1. 早餐
+            // 1. 早餐 (柳橙汁：每1000cc + 160g糖漿)
             document.getElementById('breakfastCount').textContent = `(人數：${yesterdayGuests} 人)`;
             const eggPortions = Math.ceil(yesterdayGuests / 8);
             const eggLiquid = eggPortions * 500;
@@ -243,26 +242,29 @@
             `;
 
             if (yesterdayGuests < 8 && yesterdayGuests > 0) {
+                const orangeWater = 2000;
+                const orangeSyrup = (orangeWater / 1000) * 160;
                 breakfastHtml += `
-                    <div class="sub-card" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center;">
-                        <div><span class="font-bold">🍊 早餐柳橙汁</span><br><span class="text-xs">&lt;8人單出</span></div>
-                        <span class="text-amber font-bold" style="font-size:16px;">2000 cc</span>
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <div class="flex-between"><span class="font-bold">🍊 早餐柳橙汁</span><span class="text-amber font-bold">${orangeWater} cc</span></div>
+                        <div class="text-xs" style="margin-top:4px;">水 ${orangeWater}g ＋ 糖漿 <span class="text-amber font-bold">${orangeSyrup}g</span></div>
                     </div>
-                    <div class="sub-card" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center; opacity: 0.5;">
-                        <div><span class="font-bold">🫖 早餐紅茶</span><br><span class="text-xs">&lt;8人不出品</span></div>
-                        <span class="text-slate-400 font-bold" style="font-size:16px;">0 cc</span>
+                    <div class="sub-card" style="margin-bottom:0; opacity: 0.5;">
+                        <div class="flex-between"><span class="font-bold">🫖 早餐紅茶</span><span class="font-bold">0 cc</span></div>
+                        <div class="text-xs" style="margin-top:4px;">&lt;8人不出品</div>
                     </div>
                 `;
             } else {
                 const bfCC = getTieredDrinkCC(yesterdayGuests);
+                const orangeSyrup = (bfCC / 1000) * 160;
                 breakfastHtml += `
-                    <div class="sub-card" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center;">
-                        <div><span class="font-bold">🍊 早餐柳橙汁</span><br><span class="text-xs">依級距換算</span></div>
-                        <span class="text-amber font-bold" style="font-size:16px;">${bfCC} cc</span>
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <div class="flex-between"><span class="font-bold">🍊 早餐柳橙汁</span><span class="text-amber font-bold">${bfCC} cc</span></div>
+                        <div class="text-xs" style="margin-top:4px;">水 ${bfCC}g ＋ 糖漿 <span class="text-amber font-bold">${orangeSyrup}g</span></div>
                     </div>
-                    <div class="sub-card" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center;">
-                        <div><span class="font-bold">🫖 早餐紅茶</span><br><span class="text-xs">依級距換算</span></div>
-                        <span class="text-amber font-bold" style="font-size:16px;">${bfCC} cc</span>
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <div class="flex-between"><span class="font-bold">🫖 早餐紅茶</span><span class="text-amber font-bold">${bfCC} cc</span></div>
+                        <div class="text-xs" style="margin-top:4px;">直接由現成紅茶桶出餐</div>
                     </div>
                 `;
             }
@@ -330,21 +332,24 @@
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">白蘿蔔</span><br><span class="font-bold" style="font-size:15px;">${vegRadish} 片</span></div>
             `;
 
-            // 4. 飲料
+            // 4. 下午茶與晚餐飲料 (金桔檸檬更新為每1000cc + 150g檸檬濃縮汁)
             const afDrinkCC = getTieredDrinkCC(todayGuests);
+            const milkPowder = (afDrinkCC / 1000) * 50;       // 奶茶：每1000cc + 50g奶精粉
+            const grapefruitSyrup = (afDrinkCC / 1000) * 160; // 葡萄柚：每1000cc + 160g糖漿
+            const kumquatSyrup = (afDrinkCC / 1000) * 150;    // 金桔檸檬：每1000cc + 150g檸檬濃縮汁
 
             document.getElementById('drinkList').innerHTML = `
                 <div class="sub-card" style="margin-bottom:0;">
                     <div class="flex-between"><span class="font-bold">🧋 下午茶奶茶</span><span class="text-amber font-bold">${afDrinkCC} cc</span></div>
-                    <div class="text-xs">依實戰級距換算</div>
+                    <div class="text-xs" style="margin-top:4px;">紅茶 ${afDrinkCC}cc ＋ 奶精粉 <span class="text-amber font-bold">${milkPowder}g</span></div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0;">
                     <div class="flex-between"><span class="font-bold">🍇 下午葡萄柚汁</span><span class="text-amber font-bold">${afDrinkCC} cc</span></div>
-                    <div class="text-xs">依實戰級距換算</div>
+                    <div class="text-xs" style="margin-top:4px;">水 ${afDrinkCC}g ＋ 糖漿 <span class="text-amber font-bold">${grapefruitSyrup}g</span></div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0; grid-column: 1 / -1;">
                     <div class="flex-between"><span class="font-bold">🍋 晚餐金桔檸檬</span><span class="text-amber font-bold">${afDrinkCC} cc</span></div>
-                    <div class="text-xs">依實戰級距換算</div>
+                    <div class="text-xs" style="margin-top:4px;">水 ${afDrinkCC}g ＋ 檸檬濃縮汁 <span class="text-amber font-bold">${kumquatSyrup}g</span></div>
                 </div>
             `;
         }
