@@ -74,12 +74,12 @@
                 </div>
                 <div class="grid-3">
                     <div>
-                        <span class="text-xs" style="display:block; margin-bottom:4px;">酸湯盤數</span>
-                        <input type="number" id="soupAcid" min="0" value="3" oninput="calculate()">
-                    </div>
-                    <div>
                         <span class="text-xs" style="display:block; margin-bottom:4px;">辣湯盤數</span>
                         <input type="number" id="soupSpicy" min="0" value="2" oninput="calculate()">
+                    </div>
+                    <div>
+                        <span class="text-xs" style="display:block; margin-bottom:4px;">酸湯盤數</span>
+                        <input type="number" id="soupAcid" min="0" value="3" oninput="calculate()">
                     </div>
                     <div>
                         <span class="text-xs" style="display:block; margin-bottom:4px;">清湯盤數</span>
@@ -88,9 +88,13 @@
                 </div>
             </div>
 
-            <div class="grid-3">
+            <div class="grid-4">
                 <div class="sub-card" style="margin-bottom:0;">
-                    <label>大菜盆 (3+人)</label>
+                    <label>五人菜盆</label>
+                    <input type="number" id="basinFive" min="0" value="0" oninput="calculate()">
+                </div>
+                <div class="sub-card" style="margin-bottom:0;">
+                    <label>大菜盆 (3-4人)</label>
                     <input type="number" id="basinLarge" min="0" value="4" oninput="calculate()">
                 </div>
                 <div class="sub-card" style="margin-bottom:0;">
@@ -132,7 +136,6 @@
     </div>
 
     <script>
-        // 級距式飲料水量對照函數 (依據人數決定單桶水量)
         function getTieredDrinkCC(guests) {
             if (guests <= 0) return 0;
             if (guests < 15) return 2000;
@@ -154,9 +157,10 @@
             const yesterdayGuests = parseInt(document.getElementById('yesterdayGuests').value) || 0;
             const todayGuests = parseInt(document.getElementById('todayGuests').value) || 0;
             const todayTents = parseInt(document.getElementById('todayTents').value) || 0;
-            const soupAcid = parseInt(document.getElementById('soupAcid').value) || 0;
             const soupSpicy = parseInt(document.getElementById('soupSpicy').value) || 0;
+            const soupAcid = parseInt(document.getElementById('soupAcid').value) || 0;
             const soupClear = parseInt(document.getElementById('soupClear').value) || 0;
+            const basinFive = parseInt(document.getElementById('basinFive').value) || 0;
             const basinLarge = parseInt(document.getElementById('basinLarge').value) || 0;
             const basinSmall = parseInt(document.getElementById('basinSmall').value) || 0;
             const basinVegan = parseInt(document.getElementById('basinVegan').value) || 0;
@@ -164,7 +168,7 @@
             const warningEl = document.getElementById('tentWarning');
             warningEl.style.display = todayTents > 20 ? 'block' : 'none';
 
-            const totalSoupOrdered = soupAcid + soupSpicy + soupClear;
+            const totalSoupOrdered = soupSpicy + soupAcid + soupClear;
             const sumStatusEl = document.getElementById('flavorSumStatus');
             if (totalSoupOrdered === todayTents) {
                 sumStatusEl.textContent = "分配正確";
@@ -174,7 +178,7 @@
                 sumStatusEl.className = "badge badge-danger";
             }
 
-            // 1. 早餐 (未達 8 人只出柳橙汁 2000cc，不出紅茶；8人以上雙飲品依級距)
+            // 1. 早餐
             document.getElementById('breakfastCount').textContent = `(人數：${yesterdayGuests} 人)`;
             const eggPortions = Math.ceil(yesterdayGuests / 8);
             const eggLiquid = eggPortions * 500;
@@ -217,23 +221,23 @@
             }
             document.getElementById('breakfastList').innerHTML = breakfastHtml;
 
-            // 2. 酸菜魚
-            const prepAcid = getPreparedSoupPortions(soupAcid);
+            // 2. 酸菜魚 (順序調整：辣左、酸中、清右)
             const prepSpicy = getPreparedSoupPortions(soupSpicy);
+            const prepAcid = getPreparedSoupPortions(soupAcid);
             const prepClear = getPreparedSoupPortions(soupClear);
-            const totalSalt = (prepAcid * 7) + (prepSpicy * 7) + (prepClear * 7);
-            const totalBonePowder = (prepAcid * 3) + (prepSpicy * 3) + (prepClear * 5);
+            const totalSalt = (prepSpicy * 7) + (prepAcid * 7) + (prepClear * 7);
+            const totalBonePowder = (prepSpicy * 3) + (prepAcid * 3) + (prepClear * 5);
 
             document.getElementById('soupList').innerHTML = `
-                <div class="sub-card" style="margin-bottom:0;">
-                    <div class="text-amber font-bold" style="margin-bottom:4px;">酸湯 (點${soupAcid}份)</div>
-                    <div class="text-sm">需備湯：<span class="font-bold">${prepAcid}份</span></div>
-                    <div class="text-xs" style="margin-top:2px;">水:${prepAcid*1000}g|酸醬:${prepAcid*40}g|白醋:${prepAcid*30}g|米酒:${prepAcid*15}g</div>
-                </div>
                 <div class="sub-card" style="margin-bottom:0;">
                     <div class="text-amber font-bold" style="margin-bottom:4px;">辣湯 (點${soupSpicy}份)</div>
                     <div class="text-sm">需備湯：<span class="font-bold">${prepSpicy}份</span></div>
                     <div class="text-xs" style="margin-top:2px;">水:${prepSpicy*1000}g|醬油:${prepSpicy*20}g|底料:${prepSpicy}塊</div>
+                </div>
+                <div class="sub-card" style="margin-bottom:0;">
+                    <div class="text-amber font-bold" style="margin-bottom:4px;">酸湯 (點${soupAcid}份)</div>
+                    <div class="text-sm">需備湯：<span class="font-bold">${prepAcid}份</span></div>
+                    <div class="text-xs" style="margin-top:2px;">水:${prepAcid*1000}g|酸醬:${prepAcid*40}g|白醋:${prepAcid*30}g|米酒:${prepAcid*15}g</div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0;">
                     <div class="text-amber font-bold" style="margin-bottom:4px;">清湯 (點${soupClear}份)</div>
@@ -249,15 +253,15 @@
                 <div style="background:#1e293b; padding:8px; border-radius:6px;"><span class="text-xs">火鍋底料</span><br><span class="text-amber font-bold">${prepSpicy} 塊</span></div>
             `;
 
-            // 3. 菜盆
-            const vegCabbage = (basinLarge * 150) + (basinSmall * 100) + (basinVegan * 80);
-            const vegBokChoy = (basinLarge * 80) + (basinSmall * 40) + (basinVegan * 30);
-            const vegMushroom = (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
-            const vegPumpkin = (basinLarge * 5) + (basinSmall * 3) + (basinVegan * 3);
-            const vegTomato = (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
-            const vegEnokiLarge = (basinLarge * 1) + (basinSmall * 0) + (basinVegan * 0);
-            const vegEnokiSmall = (basinLarge * 0) + (basinSmall * 1) + (basinVegan * 1);
-            const vegRadish = (basinLarge * 4) + (basinSmall * 2) + (basinVegan * 2);
+            // 3. 菜盆 (加入五人菜盆：大盆基礎上南瓜+1、蕃茄+1、蘿蔔+1)
+            const vegCabbage = (basinFive * 150) + (basinLarge * 150) + (basinSmall * 100) + (basinVegan * 80);
+            const vegBokChoy = (basinFive * 80) + (basinLarge * 80) + (basinSmall * 40) + (basinVegan * 30);
+            const vegMushroom = (basinFive * 2) + (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
+            const vegPumpkin = (basinFive * 6) + (basinLarge * 5) + (basinSmall * 3) + (basinVegan * 3);
+            const vegTomato = (basinFive * 3) + (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
+            const vegEnokiLarge = (basinFive * 1) + (basinLarge * 1) + (basinSmall * 0) + (basinVegan * 0);
+            const vegEnokiSmall = (basinFive * 0) + (basinLarge * 0) + (basinSmall * 1) + (basinVegan * 1);
+            const vegRadish = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2) + (basinVegan * 2);
 
             document.getElementById('vegetableList').innerHTML = `
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">高麗菜</span><br><span class="font-bold" style="font-size:15px;">${vegCabbage} g</span></div>
@@ -270,7 +274,7 @@
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">白蘿蔔</span><br><span class="font-bold" style="font-size:15px;">${vegRadish} 片</span></div>
             `;
 
-            // 4. 下午茶與晚餐飲料 (依級距換算)
+            // 4. 下午茶與晚餐飲料
             const afDrinkCC = getTieredDrinkCC(todayGuests);
 
             document.getElementById('drinkList').innerHTML = `
@@ -294,9 +298,10 @@
                 document.getElementById('yesterdayGuests').value = 4;
                 document.getElementById('todayGuests').value = 18;
                 document.getElementById('todayTents').value = 6;
-                document.getElementById('soupAcid').value = 3;
                 document.getElementById('soupSpicy').value = 2;
+                document.getElementById('soupAcid').value = 3;
                 document.getElementById('soupClear').value = 1;
+                document.getElementById('basinFive').value = 0;
                 document.getElementById('basinLarge').value = 4;
                 document.getElementById('basinSmall').value = 2;
                 document.getElementById('basinVegan').value = 0;
