@@ -108,6 +108,25 @@
             </div>
         </div>
 
+        <!-- 區塊：洗米計算機 -->
+        <div class="card">
+            <h2>🍚 洗米與煮飯水量計算 <span class="text-xs">(1杯=650g，水=杯數×950-100cc)</span></h2>
+            <div class="grid-3">
+                <div class="sub-card" style="margin-bottom:0;">
+                    <label style="color: #fcd34d;">洗米杯數</label>
+                    <input type="number" id="riceCups" min="0" step="0.5" value="2" oninput="calculate()">
+                </div>
+                <div class="sub-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <span class="text-xs">生米總重</span>
+                    <span id="riceWeightOut" class="text-amber font-bold" style="font-size:18px; margin-top:4px;">1300 g</span>
+                </div>
+                <div class="sub-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <span class="text-xs">實際加水量</span>
+                    <span id="riceWaterOut" class="text-amber font-bold" style="font-size:18px; margin-top:4px;">1800 cc</span>
+                </div>
+            </div>
+        </div>
+
         <!-- 區塊二：結果輸出 -->
         <div class="card">
             <h2>🌅 早餐備料清單 <span class="text-xs" id="breakfastCount">(人數：4 人)</span></h2>
@@ -144,7 +163,8 @@
             basinFive: 0,
             basinLarge: 4,
             basinSmall: 2,
-            basinVegan: 0
+            basinVegan: 0,
+            riceCups: 2
         };
 
         function loadSavedData() {
@@ -200,7 +220,8 @@
                 basinFive: parseInt(document.getElementById('basinFive').value) || 0,
                 basinLarge: parseInt(document.getElementById('basinLarge').value) || 0,
                 basinSmall: parseInt(document.getElementById('basinSmall').value) || 0,
-                basinVegan: parseInt(document.getElementById('basinVegan').value) || 0
+                basinVegan: parseInt(document.getElementById('basinVegan').value) || 0,
+                riceCups: parseFloat(document.getElementById('riceCups').value) || 0
             };
 
             saveData(currentData);
@@ -208,7 +229,8 @@
             const {
                 yesterdayGuests, todayGuests, todayTents,
                 soupSpicy, soupAcid, soupClear,
-                basinFive, basinLarge, basinSmall, basinVegan
+                basinFive, basinLarge, basinSmall, basinVegan,
+                riceCups
             } = currentData;
 
             const warningEl = document.getElementById('tentWarning');
@@ -224,7 +246,13 @@
                 sumStatusEl.className = "badge badge-danger";
             }
 
-            // 1. 早餐 (柳橙汁：每1000cc + 160g糖漿)
+            // 0. 洗米計算 (1杯=650g, 水=杯數*950 - 100cc)
+            const riceWeight = Math.round(riceCups * 650);
+            const riceWater = riceCups > 0 ? Math.max(0, Math.round(riceCups * 950 - 100)) : 0;
+            document.getElementById('riceWeightOut').textContent = `${riceWeight} g`;
+            document.getElementById('riceWaterOut').textContent = `${riceWater} cc`;
+
+            // 1. 早餐
             document.getElementById('breakfastCount').textContent = `(人數：${yesterdayGuests} 人)`;
             const eggPortions = Math.ceil(yesterdayGuests / 8);
             const eggLiquid = eggPortions * 500;
@@ -332,11 +360,11 @@
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">白蘿蔔</span><br><span class="font-bold" style="font-size:15px;">${vegRadish} 片</span></div>
             `;
 
-            // 4. 下午茶與晚餐飲料 (金桔檸檬更新為每1000cc + 150g檸檬濃縮汁)
+            // 4. 下午茶與晚餐飲料
             const afDrinkCC = getTieredDrinkCC(todayGuests);
-            const milkPowder = (afDrinkCC / 1000) * 50;       // 奶茶：每1000cc + 50g奶精粉
-            const grapefruitSyrup = (afDrinkCC / 1000) * 160; // 葡萄柚：每1000cc + 160g糖漿
-            const kumquatSyrup = (afDrinkCC / 1000) * 150;    // 金桔檸檬：每1000cc + 150g檸檬濃縮汁
+            const milkPowder = (afDrinkCC / 1000) * 50;
+            const grapefruitSyrup = (afDrinkCC / 1000) * 160;
+            const kumquatSyrup = (afDrinkCC / 1000) * 150;
 
             document.getElementById('drinkList').innerHTML = `
                 <div class="sub-card" style="margin-bottom:0;">
