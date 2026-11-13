@@ -16,8 +16,9 @@
         h2 { font-size: 15px; color: #fbbf24; font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #334155; padding-bottom: 8px; }
         .sub-card { background-color: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
         label { display: block; font-size: 12px; font-weight: 500; color: #cbd5e1; margin-bottom: 6px; }
-        input[type="number"] { width: 100%; background-color: #1e293b; border: 1px solid #475569; border-radius: 8px; padding: 10px; font-size: 16px; font-weight: bold; text-align: center; color: #ffffff; outline: none; }
-        input[type="number"]:focus { border-color: #fbbf24; }
+        input[type="number"], select { width: 100%; background-color: #1e293b; border: 1px solid #475569; border-radius: 8px; padding: 10px; font-size: 16px; font-weight: bold; text-align: center; color: #ffffff; outline: none; }
+        input[type="number"]:focus, select:focus { border-color: #fbbf24; }
+        select { text-align-last: center; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
         .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -106,6 +107,18 @@
                     <input type="number" id="basinVegan" min="0" value="0" oninput="calculate()">
                 </div>
             </div>
+
+            <!-- 下拉選單：單份菜盆食材速查 -->
+            <div class="sub-card" style="margin-top: 12px; margin-bottom:0; background-color: #1e293b;">
+                <label style="color: #fcd34d; margin-bottom:6px;">📖 單份菜盆食材明細速查 (下拉檢視)</label>
+                <select id="basinSelector" onchange="showBasinDetail()">
+                    <option value="five">🟢 五人菜盆 (點此檢視單份明細)</option>
+                    <option value="large">🟡 大菜盆 (3-4人) (點此檢視單份明細)</option>
+                    <option value="small">🟠 小菜盆 (2人) (點此檢視單份明細)</option>
+                    <option value="vegan">🟣 素菜盆 (額外) (點此檢視單份明細)</option>
+                </select>
+                <div id="basinDetailDisplay" class="text-xs" style="margin-top: 8px; line-height: 1.6; color: #94a3b8; background: #0f172a; padding: 8px; border-radius: 6px;"></div>
+            </div>
         </div>
 
         <!-- 區塊：洗米計算機 -->
@@ -164,8 +177,27 @@
             basinLarge: 4,
             basinSmall: 2,
             basinVegan: 0,
-            riceCups: 2
+            riceCups: 2,
+            basinSelector: 'five'
         };
+
+        const basinDetails = {
+            five: "高麗菜: 150g | 青江菜: 80g | 香菇: 2朵 | 南瓜: 6片 | 牛蕃茄: 3片 | 金針菇(大): 1片 | 白蘿蔔: 5片",
+            large: "高麗菜: 150g | 青江菜: 80g | 香菇: 2朵 | 南瓜: 5片 | 牛蕃茄: 2片 | 金針菇(大): 1片 | 白蘿蔔: 4片",
+            small: "高麗菜: 100g | 青江菜: 40g | 香菇: 1朵 | 南瓜: 3片 | 牛蕃茄: 1片 | 金針菇(小): 1片 | 白蘿蔔: 2片",
+            vegan: "高麗菜: 80g | 青江菜: 30g | 香菇: 1朵 | 南瓜: 3片 | 牛蕃茄: 1片 | 金針菇(小): 1片 | 白蘿蔔: 2片"
+        };
+
+        function showBasinDetail() {
+            const selectEl = document.getElementById('basinSelector');
+            const displayEl = document.getElementById('basinDetailDisplay');
+            const val = selectEl.value;
+            displayEl.innerHTML = `<span class="text-amber font-bold">單份明細：</span> ${basinDetails[val]}`;
+            // 順便儲存下拉選單狀態
+            const currentData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            currentData.basinSelector = val;
+            saveData(currentData);
+        }
 
         function loadSavedData() {
             try {
@@ -182,6 +214,7 @@
             } catch (e) {
                 console.error('讀取記憶失敗:', e);
             }
+            showBasinDetail();
         }
 
         function saveData(data) {
@@ -221,7 +254,8 @@
                 basinLarge: parseInt(document.getElementById('basinLarge').value) || 0,
                 basinSmall: parseInt(document.getElementById('basinSmall').value) || 0,
                 basinVegan: parseInt(document.getElementById('basinVegan').value) || 0,
-                riceCups: parseFloat(document.getElementById('riceCups').value) || 0
+                riceCups: parseFloat(document.getElementById('riceCups').value) || 0,
+                basinSelector: document.getElementById('basinSelector').value
             };
 
             saveData(currentData);
@@ -246,7 +280,7 @@
                 sumStatusEl.className = "badge badge-danger";
             }
 
-            // 0. 洗米計算 (1杯=650g, 水=杯數*950 - 100cc)
+            // 0. 洗米計算
             const riceWeight = Math.round(riceCups * 650);
             const riceWater = riceCups > 0 ? Math.max(0, Math.round(riceCups * 950 - 100)) : 0;
             document.getElementById('riceWeightOut').textContent = `${riceWeight} g`;
@@ -339,7 +373,7 @@
                 </div>
             `;
 
-            // 3. 菜盆
+            // 3. 菜盆總計
             const vegCabbage = (basinFive * 150) + (basinLarge * 150) + (basinSmall * 100) + (basinVegan * 80);
             const vegBokChoy = (basinFive * 80) + (basinLarge * 80) + (basinSmall * 40) + (basinVegan * 30);
             const vegMushroom = (basinFive * 2) + (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
@@ -389,6 +423,7 @@
                     const el = document.getElementById(key);
                     if (el) el.value = defaultValues[key];
                 });
+                showBasinDetail();
                 calculate();
             }
         }
