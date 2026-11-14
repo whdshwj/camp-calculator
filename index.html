@@ -32,7 +32,7 @@
         .font-bold { font-weight: bold; }
         .text-amber { color: #fbbf24; }
 
-        /* 菜盆卡片點擊展開樣式 */
+        /* 菜盆點擊展開明細樣式 */
         .basin-card { cursor: pointer; transition: border-color 0.2s; }
         .basin-card:hover { border-color: #475569; }
         .basin-card.active { border-color: #fbbf24; }
@@ -116,7 +116,7 @@
                     <input type="number" id="basinFive" min="0" value="0" oninput="calculate()">
                     <div class="basin-detail">
                         <span class="text-amber font-bold">【單份數量】</span><br>
-                        <span class="text-xs" style="color: #fb7185;">⚠️ 清單待確認</span>
+                        • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：3朵<br>• 南瓜：5片<br>• 牛番茄：3片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 蘿蔔：5片<br>• 川耳：4個
                     </div>
                 </div>
 
@@ -128,16 +128,7 @@
                     <input type="number" id="basinLarge" min="0" value="4" oninput="calculate()">
                     <div class="basin-detail">
                         <span class="text-amber font-bold">【單份數量】</span><br>
-                        • 高麗菜：150g<br>
-                        • 青江菜：80g<br>
-                        • 香菇：2朵<br>
-                        • 南瓜：5片<br>
-                        • 牛番茄：2片<br>
-                        • 金針菇：1大<br>
-                        • 凍豆腐：4個<br>
-                        • 蒟蒻捲：4個<br>
-                        • 蘿蔔：4片<br>
-                        • 川耳：4個
+                        • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：2朵<br>• 南瓜：5片<br>• 牛番茄：2片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 蘿蔔：4片<br>• 川耳：4個
                     </div>
                 </div>
 
@@ -149,16 +140,7 @@
                     <input type="number" id="basinSmall" min="0" value="2" oninput="calculate()">
                     <div class="basin-detail">
                         <span class="text-amber font-bold">【單份數量】</span><br>
-                        • 高麗菜：100g<br>
-                        • 青江菜：40g<br>
-                        • 香菇：1朵<br>
-                        • 南瓜：3片<br>
-                        • 牛番茄：1片<br>
-                        • 金針菇：1小<br>
-                        • 凍豆腐：2個<br>
-                        • 蒟蒻捲：2個<br>
-                        • 蘿蔔：2片<br>
-                        • 川耳：3個
+                        • 高麗菜：100g<br>• 青江菜：40g<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 蘿蔔：2片<br>• 川耳：3個
                     </div>
                 </div>
 
@@ -170,41 +152,33 @@
                     <input type="number" id="basinVegan" min="0" value="0" oninput="calculate()">
                     <div class="basin-detail">
                         <span class="text-amber font-bold">【單份數量】</span><br>
-                        • 高麗菜：80g<br>
-                        • 青江菜：35g<br>
-                        • 娃娃菜：1個<br>
-                        • 香菇：1朵<br>
-                        • 南瓜：3片<br>
-                        • 牛番茄：1片<br>
-                        • 金針菇：1小<br>
-                        • 凍豆腐：2個<br>
-                        • 蒟蒻捲：2個<br>
-                        • 蘿蔔：2片<br>
-                        • 川耳：3個<br>
-                        • 雪白菇：1朵<br>
-                        • 冬粉：1個<br>
-                        • 素火鍋料：4種各1<br>
-                        • 芋頭：2個
+                        • 高麗菜：100g<br>• 青江菜：40g<br>• 娃娃菜：1個<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 蘿蔔：2片<br>• 川耳：3個<br>• 雪白菇：1朵<br>• 冬粉：1個<br>• 素火鍋料：4種各1<br>• 芋頭：2個
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 區塊：洗米計算機 -->
+        <!-- 區塊：洗米計算機 (雙鍋獨立) -->
         <div class="card">
             <h2>🍚 洗米與煮飯水量計算 <span class="text-xs">(1杯=650g，水=杯數×950-100cc)</span></h2>
-            <div class="grid-3">
+            <div class="grid-2">
+                <!-- 鍋 1 -->
                 <div class="sub-card" style="margin-bottom:0;">
-                    <label style="color: #fcd34d;">洗米杯數</label>
-                    <input type="number" id="riceCups" min="0" step="0.5" value="2" oninput="calculate()">
+                    <label style="color: #fcd34d; margin-bottom:4px;">第一鍋洗米杯數</label>
+                    <input type="number" id="riceCups1" min="0" step="0.5" value="2" oninput="calculate()" style="margin-bottom: 8px;">
+                    <div class="flex-between text-xs">
+                        <span>生米：<span id="riceWeight1" class="text-amber font-bold">1300 g</span></span>
+                        <span>加水：<span id="riceWater1" class="text-amber font-bold">1800 cc</span></span>
+                    </div>
                 </div>
-                <div class="sub-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                    <span class="text-xs">生米總重</span>
-                    <span id="riceWeightOut" class="text-amber font-bold" style="font-size:18px; margin-top:4px;">1300 g</span>
-                </div>
-                <div class="sub-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                    <span class="text-xs">實際加水量</span>
-                    <span id="riceWaterOut" class="text-amber font-bold" style="font-size:18px; margin-top:4px;">1800 cc</span>
+                <!-- 鍋 2 -->
+                <div class="sub-card" style="margin-bottom:0;">
+                    <label style="color: #fcd34d; margin-bottom:4px;">第二鍋洗米杯數</label>
+                    <input type="number" id="riceCups2" min="0" step="0.5" value="0" oninput="calculate()" style="margin-bottom: 8px;">
+                    <div class="flex-between text-xs">
+                        <span>生米：<span id="riceWeight2" class="text-amber font-bold">0 g</span></span>
+                        <span>加水：<span id="riceWater2" class="text-amber font-bold">0 cc</span></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -233,7 +207,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'camp_calculator_data_v1';
+        const STORAGE_KEY = 'camp_calculator_data_v2';
 
         const defaultValues = {
             yesterdayGuests: 4,
@@ -246,7 +220,8 @@
             basinLarge: 4,
             basinSmall: 2,
             basinVegan: 0,
-            riceCups: 2
+            riceCups1: 2,
+            riceCups2: 0
         };
 
         function toggleBasin(cardEl) {
@@ -284,19 +259,30 @@
             }
         }
 
-        function getTieredDrinkCC(guests) {
+        // 下午茶飲料級距
+        function getAfternoonDrinkCC(guests) {
             if (guests <= 0) return 0;
-            if (guests < 15) return 2000;
-            if (guests < 30) return 3000;
-            if (guests < 50) return 3500;
-            return 4000;
+            if (guests <= 14) return 2000;
+            if (guests <= 35) return 3000;
+            return 4000; // 36 ~ 49人以上 4000cc 封頂
+        }
+
+        // 晚餐飲料級距
+        function getDinnerDrinkCC(guests) {
+            if (guests <= 0) return 0;
+            if (guests <= 14) return 2000;
+            if (guests <= 40) return 3000;
+            return 6000; // 41 ~ 49人以上 6000cc 封頂
         }
 
         function getPreparedSoupPortions(ordered) {
             if (ordered <= 0) return 0;
             if (ordered === 1) return 3;
             if (ordered === 2) return 5;
+            if (ordered === 3) return 6;
             if (ordered === 5) return 10;
+            if (ordered === 7) return 15;
+            if (ordered === 10) return 18;
             if (ordered === 12) return 23;
             return Math.ceil(ordered * 1.8 + 1);
         }
@@ -313,7 +299,8 @@
                 basinLarge: parseInt(document.getElementById('basinLarge').value) || 0,
                 basinSmall: parseInt(document.getElementById('basinSmall').value) || 0,
                 basinVegan: parseInt(document.getElementById('basinVegan').value) || 0,
-                riceCups: parseFloat(document.getElementById('riceCups').value) || 0
+                riceCups1: parseFloat(document.getElementById('riceCups1').value) || 0,
+                riceCups2: parseFloat(document.getElementById('riceCups2').value) || 0
             };
 
             saveData(currentData);
@@ -322,7 +309,7 @@
                 yesterdayGuests, todayGuests, todayTents,
                 soupSpicy, soupAcid, soupClear,
                 basinFive, basinLarge, basinSmall, basinVegan,
-                riceCups
+                riceCups1, riceCups2
             } = currentData;
 
             const warningEl = document.getElementById('tentWarning');
@@ -338,11 +325,16 @@
                 sumStatusEl.className = "badge badge-danger";
             }
 
-            // 0. 洗米計算
-            const riceWeight = Math.round(riceCups * 650);
-            const riceWater = riceCups > 0 ? Math.max(0, Math.round(riceCups * 950 - 100)) : 0;
-            document.getElementById('riceWeightOut').textContent = `${riceWeight} g`;
-            document.getElementById('riceWaterOut').textContent = `${riceWater} cc`;
+            // 0. 洗米計算 (雙鍋獨立)
+            const w1 = Math.round(riceCups1 * 650);
+            const cc1 = riceCups1 > 0 ? Math.max(0, Math.round(riceCups1 * 950 - 100)) : 0;
+            const w2 = Math.round(riceCups2 * 650);
+            const cc2 = riceCups2 > 0 ? Math.max(0, Math.round(riceCups2 * 950 - 100)) : 0;
+
+            document.getElementById('riceWeight1').textContent = `${w1} g`;
+            document.getElementById('riceWater1').textContent = `${cc1} cc`;
+            document.getElementById('riceWeight2').textContent = `${w2} g`;
+            document.getElementById('riceWater2').textContent = `${cc2} cc`;
 
             // 1. 早餐
             document.getElementById('breakfastCount').textContent = `(人數：${yesterdayGuests} 人)`;
@@ -375,7 +367,7 @@
                     </div>
                 `;
             } else {
-                const bfCC = getTieredDrinkCC(yesterdayGuests);
+                const bfCC = getAfternoonDrinkCC(yesterdayGuests);
                 const orangeSyrup = (bfCC / 1000) * 160;
                 breakfastHtml += `
                     <div class="sub-card" style="margin-bottom:0;">
@@ -390,7 +382,7 @@
             }
             document.getElementById('breakfastList').innerHTML = breakfastHtml;
 
-            // 2. 酸菜魚
+            // 2. 酸菜魚 (辣湯/酸湯用雞粉，清湯用大骨粉)
             const prepSpicy = getPreparedSoupPortions(soupSpicy);
             const prepAcid = getPreparedSoupPortions(soupAcid);
             const prepClear = getPreparedSoupPortions(soupClear);
@@ -404,7 +396,7 @@
                         • 醬油：${prepSpicy * 20}g<br>
                         • 火鍋底料：${prepSpicy} 塊<br>
                         • 鹽巴：<span class="text-amber font-bold">${prepSpicy * 7}g</span><br>
-                        • 大骨粉：<span class="text-amber font-bold">${prepSpicy * 3}g</span>
+                        • 雞粉：<span class="text-amber font-bold">${prepSpicy * 3}g</span>
                     </div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0;">
@@ -416,7 +408,7 @@
                         • 白醋：${prepAcid * 30}g<br>
                         • 米酒：${prepAcid * 15}g<br>
                         • 鹽巴：<span class="text-amber font-bold">${prepAcid * 7}g</span><br>
-                        • 大骨粉：<span class="text-amber font-bold">${prepAcid * 3}g</span>
+                        • 雞粉：<span class="text-amber font-bold">${prepAcid * 3}g</span>
                     </div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0;">
@@ -431,45 +423,64 @@
                 </div>
             `;
 
-            // 3. 菜盆總計
-            const vegCabbage = (basinFive * 150) + (basinLarge * 150) + (basinSmall * 100) + (basinVegan * 80);
-            const vegBokChoy = (basinFive * 80) + (basinLarge * 80) + (basinSmall * 40) + (basinVegan * 30);
-            const vegMushroom = (basinFive * 2) + (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
-            const vegPumpkin = (basinFive * 6) + (basinLarge * 5) + (basinSmall * 3) + (basinVegan * 3);
+            // 3. 菜盆總計加總 (已排除凍豆腐、蒟蒻捲、川耳，並依指定順序排列)
+            const vegCabbage = (basinFive * 150) + (basinLarge * 150) + (basinSmall * 100) + (basinVegan * 100);
+            const vegBokChoy = (basinFive * 80) + (basinLarge * 80) + (basinSmall * 40) + (basinVegan * 40);
+            const vegPumpkin = (basinFive * 5) + (basinLarge * 5) + (basinSmall * 3) + (basinVegan * 3);
+            const vegRadish = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2) + (basinVegan * 2);
             const vegTomato = (basinFive * 3) + (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
             const vegEnokiLarge = (basinFive * 1) + (basinLarge * 1) + (basinSmall * 0) + (basinVegan * 0);
             const vegEnokiSmall = (basinFive * 0) + (basinLarge * 0) + (basinSmall * 1) + (basinVegan * 1);
-            const vegRadish = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2) + (basinVegan * 2);
+            const vegMushroom = (basinFive * 3) + (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
 
-            document.getElementById('vegetableList').innerHTML = `
+            let vegHtml = `
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">高麗菜</span><br><span class="font-bold" style="font-size:15px;">${vegCabbage} g</span></div>
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">青江菜</span><br><span class="font-bold" style="font-size:15px;">${vegBokChoy} g</span></div>
-                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">香菇</span><br><span class="font-bold" style="font-size:15px;">${vegMushroom} 朵</span></div>
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">南瓜</span><br><span class="font-bold" style="font-size:15px;">${vegPumpkin} 片</span></div>
-                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">牛蕃茄</span><br><span class="font-bold" style="font-size:15px;">${vegTomato} 片</span></div>
-                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">金針菇(大)</span><br><span class="font-bold" style="font-size:15px;">${vegEnokiLarge} 片</span></div>
-                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">金針菇(小)</span><br><span class="font-bold" style="font-size:15px;">${vegEnokiSmall} 片</span></div>
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">白蘿蔔</span><br><span class="font-bold" style="font-size:15px;">${vegRadish} 片</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">牛蕃茄</span><br><span class="font-bold" style="font-size:15px;">${vegTomato} 片</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">金針菇(大)</span><br><span class="font-bold" style="font-size:15px;">${vegEnokiLarge} 包</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">金針菇(小)</span><br><span class="font-bold" style="font-size:15px;">${vegEnokiSmall} 包</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">香菇</span><br><span class="font-bold" style="font-size:15px;">${vegMushroom} 朵</span></div>
             `;
+            
+            // 只有當素菜盆數量 > 0 時才顯示素菜盆專屬品項
+            if (basinVegan > 0) {
+                const vegBabyCabbage = basinVegan * 1;
+                const vegWhiteMushroom = basinVegan * 1;
+                const vegGlassNoodles = basinVegan * 1;
+                const vegVeganHotpot = basinVegan * 4;
+                const vegTaro = basinVegan * 2;
+                vegHtml += `
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">娃娃菜</span><br><span class="font-bold" style="font-size:15px;">${vegBabyCabbage} 個</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">雪白菇</span><br><span class="font-bold" style="font-size:15px;">${vegWhiteMushroom} 朵</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">冬粉</span><br><span class="font-bold" style="font-size:15px;">${vegGlassNoodles} 個</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">素火鍋料</span><br><span class="font-bold" style="font-size:15px;">${vegVeganHotpot} 個</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">芋頭</span><br><span class="font-bold" style="font-size:15px;">${vegTaro} 個</span></div>
+                `;
+            }
+            document.getElementById('vegetableList').innerHTML = vegHtml;
 
-            // 4. 下午茶與晚餐飲料
-            const afDrinkCC = getTieredDrinkCC(todayGuests);
-            const milkPowder = (afDrinkCC / 1000) * 50;
-            const grapefruitSyrup = (afDrinkCC / 1000) * 160;
-            const kumquatSyrup = (afDrinkCC / 1000) * 150;
+            // 4. 下午茶與晚餐飲料 (獨立級距)
+            const afCC = getAfternoonDrinkCC(todayGuests);
+            const dnCC = getDinnerDrinkCC(todayGuests);
+
+            const milkPowder = (afCC / 1000) * 50;
+            const grapefruitSyrup = (afCC / 1000) * 160;
+            const kumquatSyrup = (dnCC / 1000) * 150;
 
             document.getElementById('drinkList').innerHTML = `
                 <div class="sub-card" style="margin-bottom:0;">
-                    <div class="flex-between"><span class="font-bold">🧋 下午茶奶茶</span><span class="text-amber font-bold">${afDrinkCC} cc</span></div>
-                    <div class="text-xs" style="margin-top:4px;">紅茶 ${afDrinkCC}cc ＋ 奶精粉 <span class="text-amber font-bold">${milkPowder}g</span></div>
+                    <div class="flex-between"><span class="font-bold">🧋 下午茶奶茶</span><span class="text-amber font-bold">${afCC} cc</span></div>
+                    <div class="text-xs" style="margin-top:4px;">紅茶 ${afCC}cc ＋ 奶精粉 <span class="text-amber font-bold">${milkPowder}g</span></div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0;">
-                    <div class="flex-between"><span class="font-bold">🍇 下午葡萄柚汁</span><span class="text-amber font-bold">${afDrinkCC} cc</span></div>
-                    <div class="text-xs" style="margin-top:4px;">水 ${afDrinkCC}g ＋ 糖漿 <span class="text-amber font-bold">${grapefruitSyrup}g</span></div>
+                    <div class="flex-between"><span class="font-bold">🍇 下午葡萄柚汁</span><span class="text-amber font-bold">${afCC} cc</span></div>
+                    <div class="text-xs" style="margin-top:4px;">水 ${afCC}g ＋ 糖漿 <span class="text-amber font-bold">${grapefruitSyrup}g</span></div>
                 </div>
                 <div class="sub-card" style="margin-bottom:0; grid-column: 1 / -1;">
-                    <div class="flex-between"><span class="font-bold">🍋 晚餐金桔檸檬</span><span class="text-amber font-bold">${afDrinkCC} cc</span></div>
-                    <div class="text-xs" style="margin-top:4px;">水 ${afDrinkCC}g ＋ 檸檬濃縮汁 <span class="text-amber font-bold">${kumquatSyrup}g</span></div>
+                    <div class="flex-between"><span class="font-bold">🍋 晚餐金桔檸檬</span><span class="text-amber font-bold">${dnCC} cc</span></div>
+                    <div class="text-xs" style="margin-top:4px;">水 ${dnCC}g ＋ 檸檬濃縮汁 <span class="text-amber font-bold">${kumquatSyrup}g</span></div>
                 </div>
             `;
         }
