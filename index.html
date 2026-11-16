@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>營區智慧備料與採購計算機</title>
+    <title>營區智慧備料與採購系統</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #0f172a; color: #f8fafc; padding-bottom: 50px; }
@@ -218,46 +218,62 @@
 
         </div>
 
-        <!-- ==================== 分頁二：採購與廠商排休表 ==================== -->
+        <!-- ==================== 分頁二：採購與廠商排休 ==================== -->
         <div id="tab-procure" class="tab-content">
             <div class="card">
-                <h2>🚚 廠商休送貨規則對照表</h2>
-                <p class="text-xs" style="margin-bottom: 12px; color: #94a3b8;">用以核對庫存消耗與叫貨時間，避免卡到休息日斷貨。</p>
-                
-                <div class="grid-2">
+                <h2>🚚 廠商休送貨規則對照</h2>
+                <div class="grid-2" style="margin-top: 8px;">
                     <div class="sub-card" style="margin-bottom:8px;">
                         <span class="text-amber font-bold">🥦 菜商</span><br>
-                        <span class="text-sm" style="color: #fb7185;">• 休一</span> (禮拜一休息)[cite: 3]
+                        <span class="text-sm" style="color: #fb7185;">• 休一</span> (禮拜一休息)
                     </div>
                     <div class="sub-card" style="margin-bottom:8px;">
                         <span class="text-amber font-bold">🦐 藍海水產</span><br>
-                        <span class="text-sm" style="color: #fb7185;">• 休日一</span> (禮拜日、一休息)[cite: 3]
+                        <span class="text-sm" style="color: #fb7185;">• 休日一</span> (禮拜日、一休息)
                     </div>
                     <div class="sub-card" style="margin-bottom:8px;">
                         <span class="text-amber font-bold">❄️ 友誠冷凍商</span><br>
-                        <span class="text-sm" style="color: #34d399;">• 2.6送</span> (固定禮拜二、六送貨)[cite: 3]
+                        <span class="text-sm" style="color: #34d399;">• 2.6送</span> (固定二、六送貨)
                     </div>
                     <div class="sub-card" style="margin-bottom:8px;">
                         <span class="text-amber font-bold">📦 南北乾貨</span><br>
-                        <span class="text-sm" style="color: #34d399;">• 1.5送</span> (固定禮拜一、五送貨)[cite: 3]
+                        <span class="text-sm" style="color: #34d399;">• 1.5送</span> (固定一、五送貨)
                     </div>
                     <div class="sub-card" style="margin-bottom:8px; grid-column: 1 / -1;">
                         <span class="text-amber font-bold">🧃 開元</span><br>
-                        <span class="text-sm" style="color: #34d399;">• 3送</span> (固定禮拜三送貨)[cite: 3]
+                        <span class="text-sm" style="color: #34d399;">• 3送</span> (固定禮拜三送貨)
                     </div>
                 </div>
             </div>
 
+            <!-- 未來 5 天預排與庫存試算介面 -->
             <div class="card">
-                <h2>📦 未來庫存與採購試算 (建置中)</h2>
-                <p class="text-xs" style="color: #94a3b8;">此區將用來輸入現有庫存並結合未來預估帳數，自動計算何時該向各廠商叫貨。</p>
+                <h2>📅 未來 5 天預估消耗與庫存盤點</h2>
+                <p class="text-xs" style="color: #94a3b8; margin-bottom: 12px;">輸入未來 5 天預估總帳數或大/小盆數量，並可隨時手動更改冰箱現有庫存殘餘量。</p>
+                
+                <div class="sub-card">
+                    <label style="color: #fcd34d; margin-bottom: 8px;">未來 5 天總預估大菜盆需求數 (個)</label>
+                    <input type="number" id="futureLargeBasin" min="0" value="20" oninput="calculateProcurement()">
+                </div>
+
+                <div class="sub-card">
+                    <label style="color: #fcd34d; margin-bottom: 8px;">冰箱現有高麗菜庫存 (g，可隨時手動覆蓋)</label>
+                    <input type="number" id="stockCabbage" min="0" value="3000" oninput="calculateProcurement()">
+                </div>
+
+                <div class="sub-card" style="background-color: #1e293b; border-color: #475569;">
+                    <label style="color: #fbbf24; margin-bottom: 6px;">💡 採購與叫貨建議預判</label>
+                    <div id="procurementAdvice" class="text-sm" style="line-height: 1.6; color: #f8fafc;">
+                        計算中...
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
 
     <script>
-        const STORAGE_KEY = 'camp_calculator_data_v5';
+        const STORAGE_KEY = 'camp_calculator_data_v6';
 
         const defaultValues = {
             yesterdayGuests: 4,
@@ -271,7 +287,9 @@
             basinSmall: 2,
             basinVegan: 0,
             riceCups1: 2,
-            riceCups2: 0
+            riceCups2: 0,
+            futureLargeBasin: 20,
+            stockCabbage: 3000
         };
 
         let isRiceManuallyChanged = false;
@@ -382,14 +400,7 @@
             const riceCups1 = parseFloat(document.getElementById('riceCups1').value) || 0;
             const riceCups2 = parseFloat(document.getElementById('riceCups2').value) || 0;
 
-            const currentData = {
-                yesterdayGuests, todayGuests, todayTents,
-                soupSpicy, soupAcid, soupClear,
-                basinFive, basinLarge, basinSmall, basinVegan,
-                riceCups1, riceCups2,
-                isRiceManuallyChanged
-            };
-            saveData(currentData);
+            calculateProcurement();
 
             const warningEl = document.getElementById('tentWarning');
             warningEl.style.display = todayTents > 20 ? 'block' : 'none';
@@ -572,6 +583,33 @@
                     <div class="text-xs" style="margin-top:4px;">水 ${dnCC}g ＋ 檸檬濃縮汁 <span class="text-amber font-bold">${kumquatSyrup}g</span></div>
                 </div>
             `;
+
+            const fullData = {
+                ...currentData,
+                futureLargeBasin: parseInt(document.getElementById('futureLargeBasin').value) || 0,
+                stockCabbage: parseInt(document.getElementById('stockCabbage').value) || 0
+            };
+            saveData(fullData);
+        }
+
+        function calculateProcurement() {
+            const futureLarge = parseInt(document.getElementById('futureLargeBasin').value) || 0;
+            const stockCabbage = parseInt(document.getElementById('stockCabbage').value) || 0;
+
+            // 每份大菜盆高麗菜 150g
+            const totalNeedCabbage = futureLarge * 150;
+            const diffCabbage = totalNeedCabbage - stockCabbage;
+
+            let adviceHtml = `• 5天預估需消耗高麗菜：<b>${totalNeedCabbage} g</b><br>`;
+            adviceHtml += `• 目前冰箱現有庫存：<b>${stockCabbage} g</b><br>`;
+
+            if (diffCabbage > 0) {
+                adviceHtml += `<span style="color: #fb7185;">⚠️ 高麗菜不足！還缺 <b>${diffCabbage} g</b>，請留意菜商休假（休一），建議提前叫貨！</span>`;
+            } else {
+                adviceHtml += `<span style="color: #34d399;">✅ 現有高麗菜庫存足夠撐過未來 5 天。</span>`;
+            }
+
+            document.getElementById('procurementAdvice').innerHTML = adviceHtml;
         }
 
         function resetAll() {
