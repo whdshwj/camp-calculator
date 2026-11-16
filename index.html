@@ -111,15 +111,15 @@
                     <div class="grid-3">
                         <div>
                             <span class="text-xs" style="display:block; margin-bottom:4px;">辣湯盤數</span>
-                            <input type="number" id="soupSpicy" min="0" value="2" oninput="calculate()">
+                            <input type="number" id="soupSpicy" min="0" value="2" oninput="onSoupOrderChange()">
                         </div>
                         <div>
                             <span class="text-xs" style="display:block; margin-bottom:4px;">酸湯盤數</span>
-                            <input type="number" id="soupAcid" min="0" value="3" oninput="calculate()">
+                            <input type="number" id="soupAcid" min="0" value="3" oninput="onSoupOrderChange()">
                         </div>
                         <div>
                             <span class="text-xs" style="display:block; margin-bottom:4px;">清湯盤數</span>
-                            <input type="number" id="soupClear" min="0" value="1" oninput="calculate()">
+                            <input type="number" id="soupClear" min="0" value="1" oninput="onSoupOrderChange()">
                         </div>
                     </div>
                 </div>
@@ -132,8 +132,10 @@
                         </div>
                         <input type="number" id="basinFive" min="0" value="0" oninput="calculate()">
                         <div class="basin-detail">
-                            <span class="text-amber font-bold">【單份數量】</span><br>
-                            • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：3朵<br>• 南瓜：5片<br>• 牛番茄：3片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 蘿蔔：5片<br>• 川耳：4個
+                            <span class="text-amber font-bold">【菜盆單份】</span><br>
+                            • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：3朵<br>• 南瓜：5片<br>• 牛番茄：3片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 白蘿蔔：5片<br>• 川耳：4個<br>
+                            <span class="text-amber font-bold">【五人九宮格】</span><br>
+                            蟹味棒5、黃金蛋9、魚餃8、秋蟹黃5、夏夷貝5、扇貝肉5、蝦5、蛤蜊10、鴨肉丸9
                         </div>
                     </div>
 
@@ -144,8 +146,10 @@
                         </div>
                         <input type="number" id="basinLarge" min="0" value="4" oninput="calculate()">
                         <div class="basin-detail">
-                            <span class="text-amber font-bold">【單份數量】</span><br>
-                            • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：2朵<br>• 南瓜：5片<br>• 牛番茄：2片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 蘿蔔：4片<br>• 川耳：4個
+                            <span class="text-amber font-bold">【菜盆單份】</span><br>
+                            • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：2朵<br>• 南瓜：5片<br>• 牛番茄：2片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 白蘿蔔：4片<br>• 川耳：4個<br>
+                            <span class="text-amber font-bold">【正常九宮格】</span><br>
+                            蟹味棒4、黃金蛋6、魚餃6、秋蟹黃4、夏夷貝4、扇貝肉4、蝦4、蛤蜊10、鴨肉丸7
                         </div>
                     </div>
 
@@ -156,8 +160,10 @@
                         </div>
                         <input type="number" id="basinSmall" min="0" value="2" oninput="calculate()">
                         <div class="basin-detail">
-                            <span class="text-amber font-bold">【單份數量】</span><br>
-                            • 高麗菜：100g<br>• 青江菜：40g<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 蘿蔔：2片<br>• 川耳：3個
+                            <span class="text-amber font-bold">【菜盆單份】</span><br>
+                            • 高麗菜：100g<br>• 青江菜：40g<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 白蘿蔔：2片<br>• 川耳：3個<br>
+                            <span class="text-amber font-bold">【六宮格】</span><br>
+                            蟹味棒2、黃金蛋3、魚餃3、秋蟹黃2、夏夷貝2、扇貝肉2、蝦2、蛤蜊8、鴨肉丸5
                         </div>
                     </div>
 
@@ -169,7 +175,7 @@
                         <input type="number" id="basinVegan" min="0" value="0" oninput="calculate()">
                         <div class="basin-detail">
                             <span class="text-amber font-bold">【單份數量】</span><br>
-                            • 高麗菜：100g<br>• 青江菜：40g<br>• 娃娃菜：1個<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 蘿蔔：2片<br>• 川耳：3個<br>• 雪白菇：1朵<br>• 冬粉：1個<br>• 素火鍋料：4種各1<br>• 芋頭：2個
+                            • 高麗菜：100g<br>• 青江菜：40g<br>• 娃娃菜：1個<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 白蘿蔔：2片<br>• 川耳：3個<br>• 雪白菇：1朵<br>• 冬粉：1個<br>• 素火鍋料：4種各1<br>• 芋頭：2個
                         </div>
                     </div>
                 </div>
@@ -204,16 +210,49 @@
                 <div id="breakfastList" class="grid-2"></div>
             </div>
 
+            <!-- 湯底備料（含推薦與可自行輸入修改份數） -->
             <div class="card">
-                <h2>🍲 晚餐酸菜魚湯底備料 <span class="text-xs">(各湯底獨立計算，分開烹煮)</span></h2>
-                <div id="soupList" class="grid-3"></div>
+                <h2>🍲 晚餐酸菜魚湯底備料 <span class="text-xs">(可依現場自行調整實際煮湯份數)</span></h2>
+                <div class="grid-3">
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <div class="text-amber font-bold" style="margin-bottom:4px;">🔥 辣湯 (點<span id="dispOrderSpicy">2</span>份)</div>
+                        <div class="text-xs" style="margin-bottom:6px;">推薦煮：<span id="recSpicy" class="text-amber font-bold">5</span> 份</div>
+                        <label class="text-xs" style="margin-bottom:2px;">實際煮湯份數：</label>
+                        <input type="number" id="actualPrepSpicy" min="0" value="5" oninput="calculate()" style="margin-bottom:8px; padding:6px;">
+                        <div id="soupDetailSpicy" class="text-xs" style="line-height: 1.5;"></div>
+                    </div>
+
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <div class="text-amber font-bold" style="margin-bottom:4px;">🍋 酸湯 (點<span id="dispOrderAcid">3</span>份)</div>
+                        <div class="text-xs" style="margin-bottom:6px;">推薦煮：<span id="recAcid" class="text-amber font-bold">6</span> 份</div>
+                        <label class="text-xs" style="margin-bottom:2px;">實際煮湯份數：</label>
+                        <input type="number" id="actualPrepAcid" min="0" value="6" oninput="calculate()" style="margin-bottom:8px; padding:6px;">
+                        <div id="soupDetailAcid" class="text-xs" style="line-height: 1.5;"></div>
+                    </div>
+
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <div class="text-amber font-bold" style="margin-bottom:4px;">🥣 清湯 (點<span id="dispOrderClear">1</span>份)</div>
+                        <div class="text-xs" style="margin-bottom:6px;">推薦煮：<span id="recClear" class="text-amber font-bold">3</span> 份</div>
+                        <label class="text-xs" style="margin-bottom:2px;">實際煮湯份數：</label>
+                        <input type="number" id="actualPrepClear" min="0" value="3" oninput="calculate()" style="margin-bottom:8px; padding:6px;">
+                        <div id="soupDetailClear" class="text-xs" style="line-height: 1.5;"></div>
+                    </div>
+                </div>
             </div>
 
+            <!-- 菜盆食材總計 -->
             <div class="card">
-                <h2>🥬 晚餐菜盆食材與總計</h2>
+                <h2>🥬 晚餐菜盆食材總計</h2>
                 <div id="vegetableList" class="grid-4"></div>
             </div>
 
+            <!-- 九宮格 / 六宮格總計 -->
+            <div class="card">
+                <h2>🍱 九宮格 / 六宮格火鍋料與海鮮總計</h2>
+                <div id="gridBoxList" class="grid-4"></div>
+            </div>
+
+            <!-- 飲料備料 -->
             <div class="card">
                 <h2>🧃 下午茶與晚餐飲料備料 <span class="text-xs">(含糖漿/奶精粉配方)</span></h2>
                 <div id="drinkList" class="grid-2"></div>
@@ -224,7 +263,6 @@
         <!-- ==================== 分頁二：智慧採購與叫貨 ==================== -->
         <div id="tab-procure" class="tab-content">
             
-            <!-- 星期判定與廠商動態看板 -->
             <div class="card">
                 <h2>📅 叫貨日檢核與廠商狀態</h2>
                 <div class="sub-card" style="margin-top: 8px;">
@@ -242,18 +280,14 @@
                 <div id="vendorStatusBanner" class="sub-card" style="background-color: #1e293b; border-color: #475569; margin-bottom: 0;"></div>
             </div>
 
-            <!-- 未來 5 天預排表 -->
             <div class="card">
                 <h2>📊 未來 5 天預排表 (天天輸入人數與盆數)</h2>
                 <p class="text-xs" style="color: #94a3b8; margin-bottom: 10px;">依序填寫接下來 5 天每天預估的入住人數與各類菜盆需求，系統會自動加總總消耗量！</p>
-                
                 <div id="daysForecastContainer"></div>
             </div>
 
-            <!-- 核心品項庫存與自動試算 -->
             <div class="card">
                 <h2>📦 5天總消耗、現有庫存與叫貨建議</h2>
-                
                 <div class="grid-2" style="margin-bottom: 12px;">
                     <div class="sub-card" style="margin-bottom: 0;">
                         <label style="color: #fcd34d;">🥬 高麗菜現有庫存 (g)</label>
@@ -264,18 +298,14 @@
                         <input type="number" id="stockShrimp" min="0" value="5" oninput="calculateProcurement()">
                     </div>
                 </div>
-
                 <div class="sub-card" style="background-color: #1e293b; border-color: #475569; margin-bottom: 0;">
                     <label style="color: #fbbf24; margin-bottom: 6px;">💡 智慧叫貨建議與防呆提醒</label>
                     <div id="procurementAdvice" class="text-sm" style="line-height: 1.6; color: #f8fafc;"></div>
                 </div>
             </div>
 
-            <!-- 各家廠商與詳細品項清單對照 (夏夷貝、豆棗已更正，已移除老闆與6666烤肉組) -->
             <div class="card">
                 <h2>📋 各家廠商與叫貨明細對照表</h2>
-                <p class="text-xs" style="color: #94a3b8; margin-bottom: 12px;">對照您提供的廠商貨表與休送貨規則，方便叫貨時逐項點檢。</p>
-
                 <div class="sub-card">
                     <h3>🥦 菜商 <span class="badge badge-danger">休一</span></h3>
                     <div class="vendor-item-list">
@@ -293,7 +323,7 @@
                 <div class="sub-card">
                     <h3>❄️ 友誠冷凍商 <span class="badge badge-success">2.6送</span></h3>
                     <div class="vendor-item-list">
-                        蟹肉棒(包)、黃金蛋(包)、魚餃(包)、秋蟹黃(包)、凍豆腐(包)、德式香腸(包)、雞米花(包)、香菇貢魚丸(包)、東港魚丸(包)、雪魚丸(包)、雞塊(包)、薯條(包)、雞肉片(包)、梅花肉片(箱)
+                        蟹味棒(包)、黃金蛋(包)、魚餃(包)、秋蟹黃(包)、凍豆腐(包)、德式香腸(包)、雞米花(包)、鴨肉丸(包)、東港魚丸(包)、雪魚丸(包)、雞塊(包)、薯條(包)、雞肉片(包)、梅花肉片(箱)
                     </div>
                 </div>
 
@@ -304,7 +334,7 @@
                     </div>
                 </div>
 
-                <div class="sub-card">
+                <div class="sub-card" style="margin-bottom:0;">
                     <h3>🧃 開元 <span class="badge badge-success">3送</span></h3>
                     <div class="vendor-item-list">
                         無粉手套、紅茶包、可爾必思、芒果糖漿、金桔檸檬、葡萄柚糖漿、柳橙糖漿、百香果糖漿、咖啡粉、奶油牛角、藍莓小果醬、草莓小果醬、無鹽奶油、培根
@@ -317,7 +347,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'camp_calculator_data_v9';
+        const STORAGE_KEY = 'camp_calculator_data_v10';
 
         const defaultValues = {
             yesterdayGuests: 4,
@@ -326,6 +356,9 @@
             soupSpicy: 2,
             soupAcid: 3,
             soupClear: 1,
+            actualPrepSpicy: 5,
+            actualPrepAcid: 6,
+            actualPrepClear: 3,
             basinFive: 0,
             basinLarge: 4,
             basinSmall: 2,
@@ -350,11 +383,7 @@
             const cardEl = headerEl.closest('.basin-card');
             cardEl.classList.toggle('active');
             const icon = cardEl.querySelector('.basin-toggle-icon');
-            if (cardEl.classList.contains('active')) {
-                icon.textContent = '▲ 收合';
-            } else {
-                icon.textContent = '▼ 明細';
-            }
+            icon.textContent = cardEl.classList.contains('active') ? '▲ 收合' : '▼ 明細';
         }
 
         function initDaysForecast() {
@@ -453,6 +482,18 @@
             return Math.ceil(ordered * 1.8 + 1);
         }
 
+        // 當盤數改變時，更新推薦份數並同步帶入實際煮湯輸入框
+        function onSoupOrderChange() {
+            const soupSpicy = parseInt(document.getElementById('soupSpicy').value) || 0;
+            const soupAcid = parseInt(document.getElementById('soupAcid').value) || 0;
+            const soupClear = parseInt(document.getElementById('soupClear').value) || 0;
+
+            document.getElementById('actualPrepSpicy').value = getPreparedSoupPortions(soupSpicy);
+            document.getElementById('actualPrepAcid').value = getPreparedSoupPortions(soupAcid);
+            document.getElementById('actualPrepClear').value = getPreparedSoupPortions(soupClear);
+            calculate();
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             loadSavedData();
             document.getElementById('riceCups1').addEventListener('input', () => { isRiceManuallyChanged = true; calculate(); });
@@ -467,6 +508,11 @@
             const soupSpicy = parseInt(document.getElementById('soupSpicy').value) || 0;
             const soupAcid = parseInt(document.getElementById('soupAcid').value) || 0;
             const soupClear = parseInt(document.getElementById('soupClear').value) || 0;
+
+            const actualPrepSpicy = parseInt(document.getElementById('actualPrepSpicy').value) || 0;
+            const actualPrepAcid = parseInt(document.getElementById('actualPrepAcid').value) || 0;
+            const actualPrepClear = parseInt(document.getElementById('actualPrepClear').value) || 0;
+
             const basinFive = parseInt(document.getElementById('basinFive').value) || 0;
             const basinLarge = parseInt(document.getElementById('basinLarge').value) || 0;
             const basinSmall = parseInt(document.getElementById('basinSmall').value) || 0;
@@ -508,6 +554,7 @@
             const currentData = {
                 yesterdayGuests, todayGuests, todayTents,
                 soupSpicy, soupAcid, soupClear,
+                actualPrepSpicy, actualPrepAcid, actualPrepClear,
                 basinFive, basinLarge, basinSmall, basinVegan,
                 riceCups1, riceCups2,
                 stockCabbage: parseInt(document.getElementById('stockCabbage').value) || 0,
@@ -591,46 +638,38 @@
             }
             document.getElementById('breakfastList').innerHTML = breakfastHtml;
 
-            const prepSpicy = getPreparedSoupPortions(soupSpicy);
-            const prepAcid = getPreparedSoupPortions(soupAcid);
-            const prepClear = getPreparedSoupPortions(soupClear);
-
-            document.getElementById('soupList').innerHTML = `
-                <div class="sub-card" style="margin-bottom:0;">
-                    <div class="text-amber font-bold" style="margin-bottom:4px;">🔥 辣湯 (點${soupSpicy}份)</div>
-                    <div class="text-sm">需備湯：<span class="font-bold">${prepSpicy}份</span></div>
-                    <div class="text-xs" style="margin-top:4px; line-height: 1.5;">
-                        • 水：${prepSpicy * 1000}g<br>
-                        • 醬油：${prepSpicy * 20}g<br>
-                        • 火鍋底料：${prepSpicy} 塊<br>
-                        • 鹽巴：<span class="text-amber font-bold">${prepSpicy * 10}g</span><br>
-                        • 雞粉：<span class="text-amber font-bold">${prepSpicy * 3}g</span>
-                    </div>
-                </div>
-                <div class="sub-card" style="margin-bottom:0;">
-                    <div class="text-amber font-bold" style="margin-bottom:4px;">🍋 酸湯 (點${soupAcid}份)</div>
-                    <div class="text-sm">需備湯：<span class="font-bold">${prepAcid}份</span></div>
-                    <div class="text-xs" style="margin-top:4px; line-height: 1.5;">
-                        • 水：${prepAcid * 1000}g<br>
-                        • 酸菜醬：${prepAcid * 40}g<br>
-                        • 白醋：${prepAcid * 30}g<br>
-                        • 米酒：${prepAcid * 15}g<br>
-                        • 鹽巴：<span class="text-amber font-bold">${prepAcid * 10}g</span><br>
-                        • 雞粉：<span class="text-amber font-bold">${prepAcid * 3}g</span>
-                    </div>
-                </div>
-                <div class="sub-card" style="margin-bottom:0;">
-                    <div class="text-amber font-bold" style="margin-bottom:4px;">🥣 清湯 (點${soupClear}份)</div>
-                    <div class="text-sm">需備湯：<span class="font-bold">${prepClear}份</span></div>
-                    <div class="text-xs" style="margin-top:4px; line-height: 1.5;">
-                        • 水：${prepClear * 1000}g<br>
-                        • 基礎調味<br>
-                        • 鹽巴：<span class="text-amber font-bold">${prepClear * 7}g</span><br>
-                        • 大骨粉：<span class="text-amber font-bold">${prepClear * 5}g</span>
-                    </div>
-                </div>
+            // 更新湯底推薦份數與實際煮湯明細
+            document.getElementById('dispOrderSpicy').textContent = soupSpicy;
+            document.getElementById('recSpicy').textContent = getPreparedSoupPortions(soupSpicy);
+            document.getElementById('soupDetailSpicy').innerHTML = `
+                • 水：${actualPrepSpicy * 1000}g<br>
+                • 醬油：${actualPrepSpicy * 20}g<br>
+                • 火鍋底料：${actualPrepSpicy} 塊<br>
+                • 鹽巴：<span class="text-amber font-bold">${actualPrepSpicy * 10}g</span><br>
+                • 雞粉：<span class="text-amber font-bold">${actualPrepSpicy * 3}g</span>
             `;
 
+            document.getElementById('dispOrderAcid').textContent = soupAcid;
+            document.getElementById('recAcid').textContent = getPreparedSoupPortions(soupAcid);
+            document.getElementById('soupDetailAcid').innerHTML = `
+                • 水：${actualPrepAcid * 1000}g<br>
+                • 酸菜醬：${actualPrepAcid * 40}g<br>
+                • 白醋：${actualPrepAcid * 30}g<br>
+                • 米酒：${actualPrepAcid * 15}g<br>
+                • 鹽巴：<span class="text-amber font-bold">${actualPrepAcid * 10}g</span><br>
+                • 雞粉：<span class="text-amber font-bold">${actualPrepAcid * 3}g</span>
+            `;
+
+            document.getElementById('dispOrderClear').textContent = soupClear;
+            document.getElementById('recClear').textContent = getPreparedSoupPortions(soupClear);
+            document.getElementById('soupDetailClear').innerHTML = `
+                • 水：${actualPrepClear * 1000}g<br>
+                • 基礎調味<br>
+                • 鹽巴：<span class="text-amber font-bold">${actualPrepClear * 7}g</span><br>
+                • 大骨粉：<span class="text-amber font-bold">${actualPrepClear * 5}g</span>
+            `;
+
+            // 菜盆計算（排除凍豆腐、蒟蒻捲、川耳在總計清單）
             const totalBasinCount = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2) + (basinVegan * 2);
             const nonVeganBasinCount = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2);
             const rawShrimp = nonVeganBasinCount / 14;
@@ -657,26 +696,43 @@
             `;
             
             if (basinVegan > 0) {
-                const vegBabyCabbage = basinVegan * 1;
-                const vegWhiteMushroom = basinVegan * 1;
-                const vegGlassNoodles = basinVegan * 1;
-                const vegVeganHotpot = basinVegan * 4;
-                const vegTaro = basinVegan * 2;
                 vegHtml += `
-                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">娃娃菜</span><br><span class="font-bold" style="font-size:15px;">${vegBabyCabbage} 個</span></div>
-                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">雪白菇</span><br><span class="font-bold" style="font-size:15px;">${vegWhiteMushroom} 朵</span></div>
-                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">冬粉</span><br><span class="font-bold" style="font-size:15px;">${vegGlassNoodles} 個</span></div>
-                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">素火鍋料</span><br><span class="font-bold" style="font-size:15px;">${vegVeganHotpot} 個</span></div>
-                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">芋頭</span><br><span class="font-bold" style="font-size:15px;">${vegTaro} 個</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">娃娃菜</span><br><span class="font-bold" style="font-size:15px;">${basinVegan * 1} 個</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">雪白菇</span><br><span class="font-bold" style="font-size:15px;">${basinVegan * 1} 朵</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">冬粉</span><br><span class="font-bold" style="font-size:15px;">${basinVegan * 1} 個</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">素火鍋料</span><br><span class="font-bold" style="font-size:15px;">${basinVegan * 4} 個</span></div>
+                    <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">芋頭</span><br><span class="font-bold" style="font-size:15px;">${basinVegan * 2} 個</span></div>
                 `;
             }
 
             vegHtml += `
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">總菜盆數</span><br><span class="font-bold" style="font-size:15px;">${totalBasinCount} 個</span></div>
-                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">蝦子</span><br><span class="font-bold" style="font-size:15px;">${shrimpCount} 盒</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">菜盆蝦子(盒)</span><br><span class="font-bold" style="font-size:15px;">${shrimpCount} 盒</span></div>
             `;
-
             document.getElementById('vegetableList').innerHTML = vegHtml;
+
+            // 九宮格 / 六宮格總計計算
+            const totCrabStick = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2);
+            const totGoldEgg   = (basinFive * 9) + (basinLarge * 6) + (basinSmall * 3);
+            const totFishDump  = (basinFive * 8) + (basinLarge * 6) + (basinSmall * 3);
+            const totCrabRoe   = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2);
+            const totScallop1  = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2); // 夏夷貝
+            const totScallop2  = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2); // 扇貝肉
+            const totBoxShrimp = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2); // 蝦 (隻)
+            const totClam      = (basinFive * 10) + (basinLarge * 10) + (basinSmall * 8); // 蛤蜊
+            const totDuckBall  = (basinFive * 9) + (basinLarge * 7) + (basinSmall * 5); // 鴨肉丸
+
+            document.getElementById('gridBoxList').innerHTML = `
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">蟹味棒</span><br><span class="font-bold" style="font-size:15px;">${totCrabStick} 條</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">黃金蛋</span><br><span class="font-bold" style="font-size:15px;">${totGoldEgg} 顆</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">魚餃</span><br><span class="font-bold" style="font-size:15px;">${totFishDump} 個</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">秋蟹黃</span><br><span class="font-bold" style="font-size:15px;">${totCrabRoe} 顆</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">夏夷貝</span><br><span class="font-bold" style="font-size:15px;">${totScallop1} 個</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">扇貝肉</span><br><span class="font-bold" style="font-size:15px;">${totScallop2} 個</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">九宮格蝦子</span><br><span class="font-bold" style="font-size:15px;">${totBoxShrimp} 隻</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">蛤蜊</span><br><span class="font-bold" style="font-size:15px;">${totClam} 顆</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">鴨肉丸</span><br><span class="font-bold" style="font-size:15px;">${totDuckBall} 顆</span></div>
+            `;
 
             const afCC = getAfternoonDrinkCC(todayGuests);
             const dnCC = getDinnerDrinkCC(todayGuests);
