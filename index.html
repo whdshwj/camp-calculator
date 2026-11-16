@@ -27,6 +27,7 @@
         .badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
         .badge-success { background-color: rgba(16, 185, 129, 0.2); color: #34d399; }
         .badge-danger { background-color: rgba(244, 63, 94, 0.2); color: #fb7185; }
+        .badge-warn { background-color: rgba(251, 191, 36, 0.2); color: #fbbf24; }
         .text-sm { font-size: 13px; }
         .text-xs { font-size: 11px; color: #94a3b8; }
         .font-bold { font-weight: bold; }
@@ -74,7 +75,7 @@
         <!-- 分頁切換列 -->
         <div class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('calc', event)">📋 當日備料計算</button>
-            <button class="tab-btn" onclick="switchTab('procure', event)">🛒 採購與廠商排休</button>
+            <button class="tab-btn" onclick="switchTab('procure', event)">🛒 智慧採購與叫貨</button>
         </div>
 
         <!-- ==================== 分頁一：當日備料計算 ==================== -->
@@ -218,53 +219,54 @@
 
         </div>
 
-        <!-- ==================== 分頁二：採購與廠商排休 ==================== -->
+        <!-- ==================== 分頁二：智慧採購與叫貨 ==================== -->
         <div id="tab-procure" class="tab-content">
+            
+            <!-- 星期判定與廠商動態看板 -->
             <div class="card">
-                <h2>🚚 廠商休送貨規則對照</h2>
-                <div class="grid-2" style="margin-top: 8px;">
-                    <div class="sub-card" style="margin-bottom:8px;">
-                        <span class="text-amber font-bold">🥦 菜商</span><br>
-                        <span class="text-sm" style="color: #fb7185;">• 休一</span> (禮拜一休息)
-                    </div>
-                    <div class="sub-card" style="margin-bottom:8px;">
-                        <span class="text-amber font-bold">🦐 藍海水產</span><br>
-                        <span class="text-sm" style="color: #fb7185;">• 休日一</span> (禮拜日、一休息)
-                    </div>
-                    <div class="sub-card" style="margin-bottom:8px;">
-                        <span class="text-amber font-bold">❄️ 友誠冷凍商</span><br>
-                        <span class="text-sm" style="color: #34d399;">• 2.6送</span> (固定二、六送貨)
-                    </div>
-                    <div class="sub-card" style="margin-bottom:8px;">
-                        <span class="text-amber font-bold">📦 南北乾貨</span><br>
-                        <span class="text-sm" style="color: #34d399;">• 1.5送</span> (固定一、五送貨)
-                    </div>
-                    <div class="sub-card" style="margin-bottom:8px; grid-column: 1 / -1;">
-                        <span class="text-amber font-bold">🧃 開元</span><br>
-                        <span class="text-sm" style="color: #34d399;">• 3送</span> (固定禮拜三送貨)
-                    </div>
+                <h2>📅 叫貨日檢核與廠商狀態</h2>
+                <div class="sub-card" style="margin-top: 8px;">
+                    <label style="color: #fcd34d; margin-bottom: 6px;">今天是星期幾 (自動偵測，可手動調整)</label>
+                    <select id="currentDaySelect" onchange="calculateProcurement()">
+                        <option value="1">星期一 (Mon) - 菜商休 / 藍海休 / 南北乾貨送</option>
+                        <option value="2">星期二 (Tue) - 友誠送貨日</option>
+                        <option value="3">星期三 (Wed) - 開元送貨日</option>
+                        <option value="4">星期四 (Thu) - 正常運作</option>
+                        <option value="5">星期五 (Fri) - 南北乾貨送貨日</option>
+                        <option value="6">星期六 (Sat) - 友誠送貨日</option>
+                        <option value="0">星期日 (Sun) - 藍海水產休</option>
+                    </select>
+                </div>
+                <div id="vendorStatusBanner" class="sub-card" style="background-color: #1e293b; border-color: #475569; margin-bottom: 0;">
+                    <!-- 動態帶入今日廠商狀態 -->
                 </div>
             </div>
 
-            <!-- 未來 5 天預排與庫存試算介面 -->
+            <!-- 未來 5 天消耗與庫存盤點 -->
             <div class="card">
-                <h2>📅 未來 5 天預估消耗與庫存盤點</h2>
-                <p class="text-xs" style="color: #94a3b8; margin-bottom: 12px;">輸入未來 5 天預估總帳數或大/小盆數量，並可隨時手動更改冰箱現有庫存殘餘量。</p>
+                <h2>📦 核心品項庫存與 5 天叫貨試算</h2>
+                <p class="text-xs" style="color: #94a3b8; margin-bottom: 12px;">系統會自動計算未來 5 天預估總消耗，你可以隨時手動更改冰箱「現有庫存」來校正。</p>
                 
-                <div class="sub-card">
-                    <label style="color: #fcd34d; margin-bottom: 8px;">未來 5 天總預估大菜盆需求數 (個)</label>
-                    <input type="number" id="futureLargeBasin" min="0" value="20" oninput="calculateProcurement()">
+                <div class="grid-2" style="margin-bottom: 12px;">
+                    <div class="sub-card" style="margin-bottom: 0;">
+                        <label style="color: #fcd34d;">🥬 高麗菜現有庫存 (g)</label>
+                        <input type="number" id="stockCabbage" min="0" value="5000" oninput="calculateProcurement()">
+                    </div>
+                    <div class="sub-card" style="margin-bottom: 0;">
+                        <label style="color: #fcd34d;">🦐 蝦子現有庫存 (盒)</label>
+                        <input type="number" id="stockShrimp" min="0" value="5" oninput="calculateProcurement()">
+                    </div>
                 </div>
 
-                <div class="sub-card">
-                    <label style="color: #fcd34d; margin-bottom: 8px;">冰箱現有高麗菜庫存 (g，可隨時手動覆蓋)</label>
-                    <input type="number" id="stockCabbage" min="0" value="3000" oninput="calculateProcurement()">
+                <div class="sub-card" style="margin-bottom: 12px;">
+                    <label style="color: #fcd34d;">🧋 奶精粉現有庫存 (g)</label>
+                    <input type="number" id="stockCreamer" min="0" value="1000" oninput="calculateProcurement()">
                 </div>
 
-                <div class="sub-card" style="background-color: #1e293b; border-color: #475569;">
-                    <label style="color: #fbbf24; margin-bottom: 6px;">💡 採購與叫貨建議預判</label>
+                <div class="sub-card" style="background-color: #1e293b; border-color: #475569; margin-bottom: 0;">
+                    <label style="color: #fbbf24; margin-bottom: 6px;">💡 智慧叫貨建議與防呆提醒</label>
                     <div id="procurementAdvice" class="text-sm" style="line-height: 1.6; color: #f8fafc;">
-                        計算中...
+                        <!-- 動態叫貨建議 -->
                     </div>
                 </div>
             </div>
@@ -273,7 +275,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'camp_calculator_data_v6';
+        const STORAGE_KEY = 'camp_calculator_data_v7';
 
         const defaultValues = {
             yesterdayGuests: 4,
@@ -288,8 +290,9 @@
             basinVegan: 0,
             riceCups1: 2,
             riceCups2: 0,
-            futureLargeBasin: 20,
-            stockCabbage: 3000
+            stockCabbage: 5000,
+            stockShrimp: 5,
+            stockCreamer: 1000
         };
 
         let isRiceManuallyChanged = false;
@@ -330,6 +333,12 @@
                 }
             } catch (e) {
                 console.error('讀取記憶失敗:', e);
+            }
+            
+            // 自動偵測當前星期幾填入下拉選單（若無存檔過）
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                const todayDay = new Date().getDay(); // 0:Sun, 1:Mon ... 6:Sat
+                document.getElementById('currentDaySelect').value = todayDay;
             }
         }
 
@@ -400,7 +409,18 @@
             const riceCups1 = parseFloat(document.getElementById('riceCups1').value) || 0;
             const riceCups2 = parseFloat(document.getElementById('riceCups2').value) || 0;
 
-            calculateProcurement();
+            const currentData = {
+                yesterdayGuests, todayGuests, todayTents,
+                soupSpicy, soupAcid, soupClear,
+                basinFive, basinLarge, basinSmall, basinVegan,
+                riceCups1, riceCups2,
+                stockCabbage: parseInt(document.getElementById('stockCabbage').value) || 0,
+                stockShrimp: parseFloat(document.getElementById('stockShrimp').value) || 0,
+                stockCreamer: parseInt(document.getElementById('stockCreamer').value) || 0,
+                currentDaySelect: document.getElementById('currentDaySelect').value,
+                isRiceManuallyChanged
+            };
+            saveData(currentData);
 
             const warningEl = document.getElementById('tentWarning');
             warningEl.style.display = todayTents > 20 ? 'block' : 'none';
@@ -584,29 +604,73 @@
                 </div>
             `;
 
-            const fullData = {
-                ...currentData,
-                futureLargeBasin: parseInt(document.getElementById('futureLargeBasin').value) || 0,
-                stockCabbage: parseInt(document.getElementById('stockCabbage').value) || 0
-            };
-            saveData(fullData);
+            calculateProcurement(vegCabbage, parseFloat(shrimpCount), milkPowder);
         }
 
-        function calculateProcurement() {
-            const futureLarge = parseInt(document.getElementById('futureLargeBasin').value) || 0;
+        function calculateProcurement(todayCabbageNeed = 3000, todayShrimpNeed = 3, todayCreamerNeed = 150) {
+            const dayOfWeek = parseInt(document.getElementById('currentDaySelect').value);
+            
+            // 依據今日星期幾，顯示廠商狀態看板
+            let statusHtml = `<span class="text-amber font-bold">📢 今日廠商運作狀態：</span><br>`;
+            if (dayOfWeek === 1) { // 星期一
+                statusHtml += `• <span style="color: #fb7185;">菜商休假 (休一)</span><br>`;
+                statusHtml += `• <span style="color: #fb7185;">藍海水產休假 (休日一)</span><br>`;
+                statusHtml += `• <span style="color: #34d399;">南北乾貨送貨日 (1.5送)</span>`;
+            } else if (dayOfWeek === 2) { // 星期二
+                statusHtml += `• <span style="color: #34d399;">友誠冷凍商送貨日 (2.6送)</span><br>`;
+                statusHtml += `• 菜商、藍海正常營業`;
+            } else if (dayOfWeek === 3) { // 星期三
+                statusHtml += `• <span style="color: #34d399;">開元送貨日 (3送)</span><br>`;
+                statusHtml += `• 菜商、藍海正常營業`;
+            } else if (dayOfWeek === 4) { // 星期四
+                statusHtml += `• 各大廠商正常營業 (無特別固定送貨)`;
+            } else if (dayOfWeek === 5) { // 星期五
+                statusHtml += `• <span style="color: #34d399;">南北乾貨送貨日 (1.5送)</span><br>`;
+                statusHtml += `• 菜商、藍海正常營業`;
+            } else if (dayOfWeek === 6) { // 星期六
+                statusHtml += `• <span style="color: #34d399;">友誠冷凍商送貨日 (2.6送)</span><br>`;
+                statusHtml += `• 菜商、藍海正常營業`;
+            } else if (dayOfWeek === 0) { // 星期日
+                statusHtml += `• <span style="color: #fb7185;">藍海水產休假 (休日一)</span><br>`;
+                statusHtml += `• 菜商正常營業`;
+            }
+            document.getElementById('vendorStatusBanner').innerHTML = statusHtml;
+
+            // 庫存與叫貨建議試算
             const stockCabbage = parseInt(document.getElementById('stockCabbage').value) || 0;
+            const stockShrimp = parseFloat(document.getElementById('stockShrimp').value) || 0;
+            const stockCreamer = parseInt(document.getElementById('stockCreamer').value) || 0;
 
-            // 每份大菜盆高麗菜 150g
-            const totalNeedCabbage = futureLarge * 150;
-            const diffCabbage = totalNeedCabbage - stockCabbage;
+            // 假設用當日需求估算未來 3 天消耗
+            const est3DayCabbage = todayCabbageNeed * 3;
+            const est3DayShrimp = todayShrimpNeed * 3;
+            const est3DayCreamer = todayCreamerNeed * 3;
 
-            let adviceHtml = `• 5天預估需消耗高麗菜：<b>${totalNeedCabbage} g</b><br>`;
-            adviceHtml += `• 目前冰箱現有庫存：<b>${stockCabbage} g</b><br>`;
+            const diffCabbage = est3DayCabbage - stockCabbage;
+            const diffShrimp = est3DayShrimp - stockShrimp;
+            const diffCreamer = est3DayCreamer - stockCreamer;
 
+            let adviceHtml = `• <b>高麗菜</b>（3天預估需 ${est3DayCabbage}g，現有 ${stockCabbage}g）：`;
             if (diffCabbage > 0) {
-                adviceHtml += `<span style="color: #fb7185;">⚠️ 高麗菜不足！還缺 <b>${diffCabbage} g</b>，請留意菜商休假（休一），建議提前叫貨！</span>`;
+                if (dayOfWeek === 1) adviceHtml += `<span style="color: #fb7185;">⚠️ 庫存偏低且今天週一「菜商休假」，請務必在週二營業第一時間叫貨！</span><br>`;
+                else adviceHtml += `<span style="color: #fb7185;">⚠️ 庫存不足，建議儘快向菜商叫貨。</span><br>`;
             } else {
-                adviceHtml += `<span style="color: #34d399;">✅ 現有高麗菜庫存足夠撐過未來 5 天。</span>`;
+                adviceHtml += `<span style="color: #34d399;">✅ 充足</span><br>`;
+            }
+
+            adviceHtml += `• <b>蝦子</b>（3天預估需 ${est3DayShrimp}盒，現有 ${stockShrimp}盒）：`;
+            if (diffShrimp > 0) {
+                if (dayOfWeek === 0 || dayOfWeek === 1) adviceHtml += `<span style="color: #fb7185;">⚠️ 藍海水產休假日（日、一），需等週二才能叫貨！</span><br>`;
+                else adviceHtml += `<span style="color: #fb7185;">⚠️ 庫存不足，注意藍海水產休息日。</span><br>`;
+            } else {
+                adviceHtml += `<span style="color: #34d399;">✅ 充足</span><br>`;
+            }
+
+            adviceHtml += `• <b>奶精粉</b>（3天預估需 ${est3DayCreamer}g，現有 ${stockCreamer}g）：`;
+            if (diffCreamer > 0) {
+                adviceHtml += `<span style="color: #fb7185;">⚠️ 奶精粉不足！請配合南北乾貨送貨日（1.5送）提前叫貨。</span>`;
+            } else {
+                adviceHtml += `<span style="color: #34d399;">✅ 充足</span>`;
             }
 
             document.getElementById('procurementAdvice').innerHTML = adviceHtml;
@@ -620,6 +684,8 @@
                     const el = document.getElementById(key);
                     if (el) el.value = defaultValues[key];
                 });
+                const todayDay = new Date().getDay();
+                document.getElementById('currentDaySelect').value = todayDay;
                 calculate();
             }
         }
