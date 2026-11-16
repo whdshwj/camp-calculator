@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>營區智慧備料計算機</title>
+    <title>營區智慧備料與採購計算機</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #0f172a; color: #f8fafc; padding-bottom: 50px; }
@@ -32,7 +32,14 @@
         .font-bold { font-weight: bold; }
         .text-amber { color: #fbbf24; }
 
-        /* 菜盆點擊展開明細樣式 (僅點擊標題列觸發) */
+        /* 分頁切換按鈕列樣式 */
+        .tab-nav { display: flex; gap: 8px; margin-bottom: 16px; background: #1e293b; padding: 6px; border-radius: 12px; border: 1px solid #334155; }
+        .tab-btn { flex: 1; background: transparent; border: none; color: #94a3b8; padding: 10px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .tab-btn.active { background: #334155; color: #fbbf24; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* 菜盆點擊展開明細樣式 */
         .basin-card { transition: border-color 0.2s; }
         .basin-card.active { border-color: #fbbf24; }
         .basin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; user-select: none; cursor: pointer; }
@@ -55,7 +62,7 @@
     <header>
         <div class="max-w flex-between">
             <div>
-                <h1>🏕️ 營區智慧備料計算機</h1>
+                <h1>🏕️ 營區智慧備料與採購系統</h1>
                 <p class="text-xs">營區專用 · 自動記憶數據</p>
             </div>
             <button onclick="resetAll()" class="btn-danger">🗑️ 重置</button>
@@ -64,147 +71,193 @@
 
     <div class="container">
 
-        <!-- 區塊一：輸入區 -->
-        <div class="card">
-            <h2>📥 營區入住與人數數據</h2>
+        <!-- 分頁切換列 -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('calc', event)">📋 當日備料計算</button>
+            <button class="tab-btn" onclick="switchTab('procure', event)">🛒 採購與廠商排休</button>
+        </div>
 
-            <div class="grid-2" style="margin-bottom: 12px;">
-                <div class="sub-card" style="margin-bottom:0;">
-                    <label style="color: #fcd34d;">早餐總人數 (昨天下午入住)</label>
-                    <input type="number" id="yesterdayGuests" min="0" value="4" oninput="calculate()">
+        <!-- ==================== 分頁一：當日備料計算 ==================== -->
+        <div id="tab-calc" class="tab-content active">
+            
+            <div class="card">
+                <h2>📥 營區入住與人數數據</h2>
+
+                <div class="grid-2" style="margin-bottom: 12px;">
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <label style="color: #fcd34d;">早餐總人數 (昨天下午入住)</label>
+                        <input type="number" id="yesterdayGuests" min="0" value="4" oninput="calculate()">
+                    </div>
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <label style="color: #fcd34d;">下午入住總人數 (下午茶/晚餐)</label>
+                        <input type="number" id="todayGuests" min="0" value="18" oninput="calculate()">
+                    </div>
                 </div>
-                <div class="sub-card" style="margin-bottom:0;">
-                    <label style="color: #fcd34d;">下午入住總人數 (下午茶/晚餐)</label>
-                    <input type="number" id="todayGuests" min="0" value="18" oninput="calculate()">
+
+                <div class="sub-card">
+                    <label style="color: #fcd34d; margin-bottom:6px;">今天入住帳篷數 (上限20帳，用以核對酸菜魚分配)</label>
+                    <input type="number" id="todayTents" min="0" max="20" value="6" oninput="calculate()">
+                    <div id="tentWarning" class="text-xs" style="color: #fb7185; margin-top: 4px; display: none;">⚠️ 不可超過 20 帳！</div>
+                </div>
+
+                <div class="sub-card">
+                    <div class="flex-between" style="margin-bottom: 6px;">
+                        <label style="margin-bottom:0;">酸菜魚口味分配 (須等於總帳篷數)</label>
+                        <span id="flavorSumStatus" class="badge badge-success">分配正確</span>
+                    </div>
+                    <div class="grid-3">
+                        <div>
+                            <span class="text-xs" style="display:block; margin-bottom:4px;">辣湯盤數</span>
+                            <input type="number" id="soupSpicy" min="0" value="2" oninput="calculate()">
+                        </div>
+                        <div>
+                            <span class="text-xs" style="display:block; margin-bottom:4px;">酸湯盤數</span>
+                            <input type="number" id="soupAcid" min="0" value="3" oninput="calculate()">
+                        </div>
+                        <div>
+                            <span class="text-xs" style="display:block; margin-bottom:4px;">清湯盤數</span>
+                            <input type="number" id="soupClear" min="0" value="1" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-4" style="align-items: start;">
+                    <div class="sub-card basin-card" style="margin-bottom:0;">
+                        <div class="basin-header" onclick="toggleBasin(this)">
+                            <label>五人菜盆</label>
+                            <span class="basin-toggle-icon">▼ 明細</span>
+                        </div>
+                        <input type="number" id="basinFive" min="0" value="0" oninput="calculate()">
+                        <div class="basin-detail">
+                            <span class="text-amber font-bold">【單份數量】</span><br>
+                            • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：3朵<br>• 南瓜：5片<br>• 牛番茄：3片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 蘿蔔：5片<br>• 川耳：4個
+                        </div>
+                    </div>
+
+                    <div class="sub-card basin-card" style="margin-bottom:0;">
+                        <div class="basin-header" onclick="toggleBasin(this)">
+                            <label>大菜盆 (3-4人)</label>
+                            <span class="basin-toggle-icon">▼ 明細</span>
+                        </div>
+                        <input type="number" id="basinLarge" min="0" value="4" oninput="calculate()">
+                        <div class="basin-detail">
+                            <span class="text-amber font-bold">【單份數量】</span><br>
+                            • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：2朵<br>• 南瓜：5片<br>• 牛番茄：2片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 蘿蔔：4片<br>• 川耳：4個
+                        </div>
+                    </div>
+
+                    <div class="sub-card basin-card" style="margin-bottom:0;">
+                        <div class="basin-header" onclick="toggleBasin(this)">
+                            <label>小菜盆 (2人)</label>
+                            <span class="basin-toggle-icon">▼ 明細</span>
+                        </div>
+                        <input type="number" id="basinSmall" min="0" value="2" oninput="calculate()">
+                        <div class="basin-detail">
+                            <span class="text-amber font-bold">【單份數量】</span><br>
+                            • 高麗菜：100g<br>• 青江菜：40g<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 蘿蔔：2片<br>• 川耳：3個
+                        </div>
+                    </div>
+
+                    <div class="sub-card basin-card" style="margin-bottom:0;">
+                        <div class="basin-header" onclick="toggleBasin(this)">
+                            <label>素菜盆 (額外)</label>
+                            <span class="basin-toggle-icon">▼ 明細</span>
+                        </div>
+                        <input type="number" id="basinVegan" min="0" value="0" oninput="calculate()">
+                        <div class="basin-detail">
+                            <span class="text-amber font-bold">【單份數量】</span><br>
+                            • 高麗菜：100g<br>• 青江菜：40g<br>• 娃娃菜：1個<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 蘿蔔：2片<br>• 川耳：3個<br>• 雪白菇：1朵<br>• 冬粉：1個<br>• 素火鍋料：4種各1<br>• 芋頭：2個
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="sub-card">
-                <label style="color: #fcd34d; margin-bottom:6px;">今天入住帳篷數 (上限20帳，用以核對酸菜魚分配)</label>
-                <input type="number" id="todayTents" min="0" max="20" value="6" oninput="calculate()">
-                <div id="tentWarning" class="text-xs" style="color: #fb7185; margin-top: 4px; display: none;">⚠️ 不可超過 20 帳！</div>
-            </div>
-
-            <div class="sub-card">
-                <div class="flex-between" style="margin-bottom: 6px;">
-                    <label style="margin-bottom:0;">酸菜魚口味分配 (須等於總帳篷數)</label>
-                    <span id="flavorSumStatus" class="badge badge-success">分配正確</span>
-                </div>
-                <div class="grid-3">
-                    <div>
-                        <span class="text-xs" style="display:block; margin-bottom:4px;">辣湯盤數</span>
-                        <input type="number" id="soupSpicy" min="0" value="2" oninput="calculate()">
+            <!-- 洗米計算機 -->
+            <div class="card">
+                <h2>🍚 洗米與煮飯水量計算 <span class="text-xs">(1杯約640g，水=杯數×900-50cc)</span></h2>
+                <div class="grid-2">
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <label style="color: #fcd34d; margin-bottom:4px;">第一鍋洗米杯數 (可手動修改)</label>
+                        <input type="number" id="riceCups1" min="0" step="0.5" value="2" oninput="calculate()" style="margin-bottom: 8px;">
+                        <div class="flex-between text-xs">
+                            <span>生米：<span id="riceWeight1" class="text-amber font-bold">1280 g</span></span>
+                            <span>加水：<span id="riceWater1" class="text-amber font-bold">1750 cc</span></span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="text-xs" style="display:block; margin-bottom:4px;">酸湯盤數</span>
-                        <input type="number" id="soupAcid" min="0" value="3" oninput="calculate()">
-                    </div>
-                    <div>
-                        <span class="text-xs" style="display:block; margin-bottom:4px;">清湯盤數</span>
-                        <input type="number" id="soupClear" min="0" value="1" oninput="calculate()">
+                    <div class="sub-card" style="margin-bottom:0;">
+                        <label style="color: #fcd34d; margin-bottom:4px;">第二鍋洗米杯數 (可手動修改)</label>
+                        <input type="number" id="riceCups2" min="0" step="0.5" value="0" oninput="calculate()" style="margin-bottom: 8px;">
+                        <div class="flex-between text-xs">
+                            <span>生米：<span id="riceWeight2" class="text-amber font-bold">0 g</span></span>
+                            <span>加水：<span id="riceWater2" class="text-amber font-bold">0 cc</span></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid-4" style="align-items: start;">
-                <div class="sub-card basin-card" style="margin-bottom:0;">
-                    <div class="basin-header" onclick="toggleBasin(this)">
-                        <label>五人菜盆</label>
-                        <span class="basin-toggle-icon">▼ 明細</span>
-                    </div>
-                    <input type="number" id="basinFive" min="0" value="0" oninput="calculate()">
-                    <div class="basin-detail">
-                        <span class="text-amber font-bold">【單份數量】</span><br>
-                        • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：3朵<br>• 南瓜：5片<br>• 牛番茄：3片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 蘿蔔：5片<br>• 川耳：4個
-                    </div>
-                </div>
+            <!-- 結果輸出 -->
+            <div class="card">
+                <h2>🌅 早餐備料清單 <span class="text-xs" id="breakfastCount">(人數：4 人)</span></h2>
+                <div id="breakfastList" class="grid-2"></div>
+            </div>
 
-                <div class="sub-card basin-card" style="margin-bottom:0;">
-                    <div class="basin-header" onclick="toggleBasin(this)">
-                        <label>大菜盆 (3-4人)</label>
-                        <span class="basin-toggle-icon">▼ 明細</span>
-                    </div>
-                    <input type="number" id="basinLarge" min="0" value="4" oninput="calculate()">
-                    <div class="basin-detail">
-                        <span class="text-amber font-bold">【單份數量】</span><br>
-                        • 高麗菜：150g<br>• 青江菜：80g<br>• 香菇：2朵<br>• 南瓜：5片<br>• 牛番茄：2片<br>• 金針菇：1大<br>• 凍豆腐：4個<br>• 蒟蒻捲：4個<br>• 蘿蔔：4片<br>• 川耳：4個
-                    </div>
-                </div>
+            <div class="card">
+                <h2>🍲 晚餐酸菜魚湯底備料 <span class="text-xs">(各湯底獨立計算，分開烹煮)</span></h2>
+                <div id="soupList" class="grid-3"></div>
+            </div>
 
-                <div class="sub-card basin-card" style="margin-bottom:0;">
-                    <div class="basin-header" onclick="toggleBasin(this)">
-                        <label>小菜盆 (2人)</label>
-                        <span class="basin-toggle-icon">▼ 明細</span>
-                    </div>
-                    <input type="number" id="basinSmall" min="0" value="2" oninput="calculate()">
-                    <div class="basin-detail">
-                        <span class="text-amber font-bold">【單份數量】</span><br>
-                        • 高麗菜：100g<br>• 青江菜：40g<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 蘿蔔：2片<br>• 川耳：3個
-                    </div>
-                </div>
+            <div class="card">
+                <h2>🥬 晚餐菜盆食材與總計</h2>
+                <div id="vegetableList" class="grid-4"></div>
+            </div>
 
-                <div class="sub-card basin-card" style="margin-bottom:0;">
-                    <div class="basin-header" onclick="toggleBasin(this)">
-                        <label>素菜盆 (額外)</label>
-                        <span class="basin-toggle-icon">▼ 明細</span>
+            <div class="card">
+                <h2>🧃 下午茶與晚餐飲料備料 <span class="text-xs">(含糖漿/奶精粉配方)</span></h2>
+                <div id="drinkList" class="grid-2"></div>
+            </div>
+
+        </div>
+
+        <!-- ==================== 分頁二：採購與廠商排休表 ==================== -->
+        <div id="tab-procure" class="tab-content">
+            <div class="card">
+                <h2>🚚 廠商休送貨規則對照表</h2>
+                <p class="text-xs" style="margin-bottom: 12px; color: #94a3b8;">用以核對庫存消耗與叫貨時間，避免卡到休息日斷貨。</p>
+                
+                <div class="grid-2">
+                    <div class="sub-card" style="margin-bottom:8px;">
+                        <span class="text-amber font-bold">🥦 菜商</span><br>
+                        <span class="text-sm" style="color: #fb7185;">• 休一</span> (禮拜一休息)[cite: 3]
                     </div>
-                    <input type="number" id="basinVegan" min="0" value="0" oninput="calculate()">
-                    <div class="basin-detail">
-                        <span class="text-amber font-bold">【單份數量】</span><br>
-                        • 高麗菜：100g<br>• 青江菜：40g<br>• 娃娃菜：1個<br>• 香菇：1朵<br>• 南瓜：3片<br>• 牛番茄：1片<br>• 金針菇：1小<br>• 凍豆腐：2個<br>• 蒟蒻捲：2個<br>• 蘿蔔：2片<br>• 川耳：3個<br>• 雪白菇：1朵<br>• 冬粉：1個<br>• 素火鍋料：4種各1<br>• 芋頭：2個
+                    <div class="sub-card" style="margin-bottom:8px;">
+                        <span class="text-amber font-bold">🦐 藍海水產</span><br>
+                        <span class="text-sm" style="color: #fb7185;">• 休日一</span> (禮拜日、一休息)[cite: 3]
+                    </div>
+                    <div class="sub-card" style="margin-bottom:8px;">
+                        <span class="text-amber font-bold">❄️ 友誠冷凍商</span><br>
+                        <span class="text-sm" style="color: #34d399;">• 2.6送</span> (固定禮拜二、六送貨)[cite: 3]
+                    </div>
+                    <div class="sub-card" style="margin-bottom:8px;">
+                        <span class="text-amber font-bold">📦 南北乾貨</span><br>
+                        <span class="text-sm" style="color: #34d399;">• 1.5送</span> (固定禮拜一、五送貨)[cite: 3]
+                    </div>
+                    <div class="sub-card" style="margin-bottom:8px; grid-column: 1 / -1;">
+                        <span class="text-amber font-bold">🧃 開元</span><br>
+                        <span class="text-sm" style="color: #34d399;">• 3送</span> (固定禮拜三送貨)[cite: 3]
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 區塊：洗米計算機 -->
-        <div class="card">
-            <h2>🍚 洗米與煮飯水量計算 <span class="text-xs">(1杯約640g，水=杯數×900-50cc)</span></h2>
-            <div class="grid-2">
-                <div class="sub-card" style="margin-bottom:0;">
-                    <label style="color: #fcd34d; margin-bottom:4px;">第一鍋洗米杯數 (可手動修改)</label>
-                    <input type="number" id="riceCups1" min="0" step="0.5" value="2" oninput="calculate()" style="margin-bottom: 8px;">
-                    <div class="flex-between text-xs">
-                        <span>生米：<span id="riceWeight1" class="text-amber font-bold">1280 g</span></span>
-                        <span>加水：<span id="riceWater1" class="text-amber font-bold">1750 cc</span></span>
-                    </div>
-                </div>
-                <div class="sub-card" style="margin-bottom:0;">
-                    <label style="color: #fcd34d; margin-bottom:4px;">第二鍋洗米杯數 (可手動修改)</label>
-                    <input type="number" id="riceCups2" min="0" step="0.5" value="0" oninput="calculate()" style="margin-bottom: 8px;">
-                    <div class="flex-between text-xs">
-                        <span>生米：<span id="riceWeight2" class="text-amber font-bold">0 g</span></span>
-                        <span>加水：<span id="riceWater2" class="text-amber font-bold">0 cc</span></span>
-                    </div>
-                </div>
+            <div class="card">
+                <h2>📦 未來庫存與採購試算 (建置中)</h2>
+                <p class="text-xs" style="color: #94a3b8;">此區將用來輸入現有庫存並結合未來預估帳數，自動計算何時該向各廠商叫貨。</p>
             </div>
-        </div>
-
-        <!-- 區塊二：結果輸出 -->
-        <div class="card">
-            <h2>🌅 早餐備料清單 <span class="text-xs" id="breakfastCount">(人數：4 人)</span></h2>
-            <div id="breakfastList" class="grid-2"></div>
-        </div>
-
-        <div class="card">
-            <h2>🍲 晚餐酸菜魚湯底備料 <span class="text-xs">(各湯底獨立計算，分開烹煮)</span></h2>
-            <div id="soupList" class="grid-3"></div>
-        </div>
-
-        <div class="card">
-            <h2>🥬 晚餐菜盆食材與總計</h2>
-            <div id="vegetableList" class="grid-4"></div>
-        </div>
-
-        <div class="card">
-            <h2>🧃 下午茶與晚餐飲料備料 <span class="text-xs">(含糖漿/奶精粉配方)</span></h2>
-            <div id="drinkList" class="grid-2"></div>
         </div>
 
     </div>
 
     <script>
-        const STORAGE_KEY = 'camp_calculator_data_v4';
+        const STORAGE_KEY = 'camp_calculator_data_v5';
 
         const defaultValues = {
             yesterdayGuests: 4,
@@ -222,6 +275,14 @@
         };
 
         let isRiceManuallyChanged = false;
+
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
 
         function toggleBasin(headerEl) {
             const cardEl = headerEl.closest('.basin-card');
@@ -443,7 +504,6 @@
                 </div>
             `;
 
-            // 計算菜盆與蝦子 (菜盆單位個，蝦子單位盒，不醒目提示)
             const totalBasinCount = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2) + (basinVegan * 2);
             const nonVeganBasinCount = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2);
             const rawShrimp = nonVeganBasinCount / 14;
@@ -484,7 +544,6 @@
                 `;
             }
 
-            // 接續在最後面，一般字體呈現
             vegHtml += `
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">總菜盆數</span><br><span class="font-bold" style="font-size:15px;">${totalBasinCount} 個</span></div>
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">蝦子</span><br><span class="font-bold" style="font-size:15px;">${shrimpCount} 盒</span></div>
