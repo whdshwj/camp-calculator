@@ -23,7 +23,6 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
         .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
         @media(min-width: 640px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
         .btn-danger { background-color: rgba(225, 29, 72, 0.8); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; }
         .badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
@@ -176,7 +175,7 @@
                 </div>
             </div>
 
-            <!-- 洗米計算機 (單位改為 650g) -->
+            <!-- 洗米計算機 -->
             <div class="card">
                 <h2>🍚 洗米與煮飯水量計算 <span class="text-xs">(1杯約650g，水=杯數×900-50cc)</span></h2>
                 <div class="grid-2">
@@ -248,9 +247,7 @@
                 <h2>📊 未來 5 天預排表 (天天輸入人數與盆數)</h2>
                 <p class="text-xs" style="color: #94a3b8; margin-bottom: 10px;">依序填寫接下來 5 天每天預估的入住人數與各類菜盆需求，系統會自動加總總消耗量！</p>
                 
-                <div id="daysForecastContainer">
-                    <!-- 動態生成 5 天輸入行 -->
-                </div>
+                <div id="daysForecastContainer"></div>
             </div>
 
             <!-- 核心品項庫存與自動試算 -->
@@ -274,7 +271,7 @@
                 </div>
             </div>
 
-            <!-- 各家廠商與詳細品項清單對照 (依照圖片完整列出) -->
+            <!-- 各家廠商與詳細品項清單對照 (夏夷貝、豆棗已更正，已移除老闆與6666烤肉組) -->
             <div class="card">
                 <h2>📋 各家廠商與叫貨明細對照表</h2>
                 <p class="text-xs" style="color: #94a3b8; margin-bottom: 12px;">對照您提供的廠商貨表與休送貨規則，方便叫貨時逐項點檢。</p>
@@ -289,8 +286,7 @@
                 <div class="sub-card">
                     <h3>🦐 藍海水產 <span class="badge badge-danger">休日一</span></h3>
                     <div class="vendor-item-list">
-                        鱸魚、大蛤蜊、蝦 (盒)、夏貝貝、扇貝肉、鯛魚片、素火鍋料<br>
-                        <b>6666烤組：</b>無牛小排片200g 1盒、肩牛排300g 2盒、五花豬烤肉片500g 1盒、梅花豬烤肉片500g 1盒、馬來噴水香腸600g 1盒、翼板牛肉片200g 1盒、草蝦14隻 1盒、無調味雞腿排 2片
+                        鱸魚、大蛤蜊、蝦 (盒)、夏夷貝、扇貝肉、鯛魚片、素火鍋料
                     </div>
                 </div>
 
@@ -304,7 +300,7 @@
                 <div class="sub-card">
                     <h3>📦 南北乾貨 <span class="badge badge-success">1.5送</span></h3>
                     <div class="vendor-item-list">
-                        寬粉、角螺、鹽、二砂、米酒、醬油、白醋、烏醋、雞粉、味精、辣椒粉、沙茶醬、耐炸油、沙拉油、香油、巧克力、花生醬、椰香、香蒜、乾辣椒、白芝麻、辣油、奶精粉、脆瓜、香筍、豆菜、肉鬆、昆布、辣椒醬、烤肉醬、番茄醬、好米、素高纖味精
+                        寬粉、角螺、鹽、二砂、米酒、醬油、白醋、烏醋、雞粉、味精、辣椒粉、沙茶醬、耐炸油、沙拉油、香油、巧克力、花生醬、椰香、香蒜、乾辣椒、白芝麻、辣油、奶精粉、脆瓜、香筍、豆棗、肉鬆、昆布、辣椒醬、烤肉醬、番茄醬、好米、素高纖味精
                     </div>
                 </div>
 
@@ -314,14 +310,6 @@
                         無粉手套、紅茶包、可爾必思、芒果糖漿、金桔檸檬、葡萄柚糖漿、柳橙糖漿、百香果糖漿、咖啡粉、奶油牛角、藍莓小果醬、草莓小果醬、無鹽奶油、培根
                     </div>
                 </div>
-
-                <div class="sub-card" style="margin-bottom:0;">
-                    <h3>🥣 老闆 / 三友行 / 其他</h3>
-                    <div class="vendor-item-list">
-                        <b>老闆：</b>大骨粉、日式高湯粉、酸菜醬、橋頭火鍋底料<br>
-                        <b>三友行：</b>洗碗機、漂白水、擦手紙、白抹布、酒精膏、錫箔紙、保鮮膜、烤盤紙
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -329,7 +317,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'camp_calculator_data_v8';
+        const STORAGE_KEY = 'camp_calculator_data_v9';
 
         const defaultValues = {
             yesterdayGuests: 4,
@@ -498,7 +486,6 @@
             const riceCups1 = parseFloat(document.getElementById('riceCups1').value) || 0;
             const riceCups2 = parseFloat(document.getElementById('riceCups2').value) || 0;
 
-            // 收集 5 天預排數據
             let daysData = {};
             let total5DayCabbage = 0;
             let total5DayNonVeganBasins = 0;
@@ -514,7 +501,6 @@
                 daysData[`day${i}_small`] = s;
                 daysData[`day${i}_other`] = o;
 
-                // 粗估 5 天高麗菜與非素菜盆消耗 (大盆150g, 小盆100g, 五人盆假設相當於2大盆或以輸入為主)
                 total5DayCabbage += (l * 150) + (s * 100) + (o * 150);
                 total5DayNonVeganBasins += (l * 4) + (s * 2) + (o * 5);
             }
@@ -545,7 +531,6 @@
                 sumStatusEl.className = "badge badge-danger";
             }
 
-            // 洗米計算基準改為 650g
             const w1 = Math.round(riceCups1 * 650);
             const cc1 = riceCups1 > 0 ? Math.max(0, Math.round(riceCups1 * 900 - 50)) : 0;
             const w2 = Math.round(riceCups2 * 650);
