@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>露營區即時備料與採購計算機</title>
+    <title>營區智慧備料計算機</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #0f172a; color: #f8fafc; padding-bottom: 50px; }
@@ -55,7 +55,7 @@
     <header>
         <div class="max-w flex-between">
             <div>
-                <h1>🏕️ 露營區智慧備料計算機</h1>
+                <h1>🏕️ 營區智慧備料計算機</h1>
                 <p class="text-xs">營區專用 · 自動記憶數據</p>
             </div>
             <button onclick="resetAll()" class="btn-danger">🗑️ 重置</button>
@@ -157,20 +157,18 @@
             </div>
         </div>
 
-        <!-- 區塊：洗米計算機 (雙鍋獨立，自動試算但可手動修改) -->
+        <!-- 區塊：洗米計算機 -->
         <div class="card">
-            <h2>🍚 洗米與煮飯水量計算 <span class="text-xs">(1杯約650g，水=杯數×900-50cc)</span></h2>
+            <h2>🍚 洗米與煮飯水量計算 <span class="text-xs">(1杯約640g，水=杯數×900-50cc)</span></h2>
             <div class="grid-2">
-                <!-- 鍋 1 -->
                 <div class="sub-card" style="margin-bottom:0;">
                     <label style="color: #fcd34d; margin-bottom:4px;">第一鍋洗米杯數 (可手動修改)</label>
                     <input type="number" id="riceCups1" min="0" step="0.5" value="2" oninput="calculate()" style="margin-bottom: 8px;">
                     <div class="flex-between text-xs">
-                        <span>生米：<span id="riceWeight1" class="text-amber font-bold">1300 g</span></span>
+                        <span>生米：<span id="riceWeight1" class="text-amber font-bold">1280 g</span></span>
                         <span>加水：<span id="riceWater1" class="text-amber font-bold">1750 cc</span></span>
                     </div>
                 </div>
-                <!-- 鍋 2 -->
                 <div class="sub-card" style="margin-bottom:0;">
                     <label style="color: #fcd34d; margin-bottom:4px;">第二鍋洗米杯數 (可手動修改)</label>
                     <input type="number" id="riceCups2" min="0" step="0.5" value="0" oninput="calculate()" style="margin-bottom: 8px;">
@@ -194,7 +192,7 @@
         </div>
 
         <div class="card">
-            <h2>🥬 晚餐菜盆食材與蝦子總計</h2>
+            <h2>🥬 晚餐菜盆食材與總計</h2>
             <div id="vegetableList" class="grid-4"></div>
         </div>
 
@@ -206,7 +204,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'camp_calculator_data_v3';
+        const STORAGE_KEY = 'camp_calculator_data_v4';
 
         const defaultValues = {
             yesterdayGuests: 4,
@@ -223,7 +221,6 @@
             riceCups2: 0
         };
 
-        // 標記是否為手動修改過洗米杯數，避免每次動人數都強制覆蓋使用者的手動微調
         let isRiceManuallyChanged = false;
 
         function toggleBasin(headerEl) {
@@ -265,7 +262,6 @@
             }
         }
 
-        // 下午茶飲料級距
         function getAfternoonDrinkCC(guests) {
             if (guests <= 0) return 0;
             if (guests <= 14) return 2000;
@@ -273,7 +269,6 @@
             return 4000; 
         }
 
-        // 晚餐飲料級距
         function getDinnerDrinkCC(guests) {
             if (guests <= 0) return 0;
             if (guests <= 14) return 2000;
@@ -293,7 +288,6 @@
             return Math.ceil(ordered * 1.8 + 1);
         }
 
-        // 監聽洗米輸入框是否被手動改動
         document.addEventListener('DOMContentLoaded', () => {
             loadSavedData();
             document.getElementById('riceCups1').addEventListener('input', () => { isRiceManuallyChanged = true; calculate(); });
@@ -313,10 +307,8 @@
             const basinSmall = parseInt(document.getElementById('basinSmall').value) || 0;
             const basinVegan = parseInt(document.getElementById('basinVegan').value) || 0;
 
-            // 實戰洗米自動對照邏輯：約 6 人 1 杯米（48人7杯，61人9杯），一鍋最多4杯，最多兩鍋
             if (!isRiceManuallyChanged && todayGuests > 0) {
-                let totalRiceCups = Math.round((todayGuests / 6) * 10) / 10; // 粗估總杯數
-                // 對照特殊點位：48人約7杯，61人約9杯
+                let totalRiceCups = Math.round((todayGuests / 6) * 10) / 10;
                 if (todayGuests >= 47 && todayGuests <= 49) totalRiceCups = 7;
                 if (todayGuests >= 60 && todayGuests <= 62) totalRiceCups = 9;
 
@@ -351,7 +343,6 @@
                 sumStatusEl.className = "badge badge-danger";
             }
 
-            // 0. 洗米計算 (每杯650克再少一點點以實體計算，水 = 杯數*900 - 50)
             const w1 = Math.round(riceCups1 * 640);
             const cc1 = riceCups1 > 0 ? Math.max(0, Math.round(riceCups1 * 900 - 50)) : 0;
             const w2 = Math.round(riceCups2 * 640);
@@ -362,7 +353,6 @@
             document.getElementById('riceWeight2').textContent = `${w2} g`;
             document.getElementById('riceWater2').textContent = `${cc2} cc`;
 
-            // 1. 早餐 (61人準備蛋液約5000cc，其餘依每8人500cc計算)
             document.getElementById('breakfastCount').textContent = `(人數：${yesterdayGuests} 人)`;
             let eggLiquid = 0;
             if (yesterdayGuests >= 60 && yesterdayGuests <= 62) {
@@ -413,7 +403,6 @@
             }
             document.getElementById('breakfastList').innerHTML = breakfastHtml;
 
-            // 2. 酸菜魚 (辣湯/酸湯鹽巴改為10g，用雞粉)
             const prepSpicy = getPreparedSoupPortions(soupSpicy);
             const prepAcid = getPreparedSoupPortions(soupAcid);
             const prepClear = getPreparedSoupPortions(soupClear);
@@ -454,9 +443,8 @@
                 </div>
             `;
 
-            // 3. 菜盆總計與蝦子數量計算 (總菜盆 = 五人×5 + 大盆×4 + 小盆×2 + 素盆×2)
+            // 計算菜盆與蝦子 (菜盆單位個，蝦子單位盒，不醒目提示)
             const totalBasinCount = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2) + (basinVegan * 2);
-            // 蝦子：(總菜盆 - 素菜盆) / 14，小數點第一位無條件進位
             const nonVeganBasinCount = (basinFive * 5) + (basinLarge * 4) + (basinSmall * 2);
             const rawShrimp = nonVeganBasinCount / 14;
             const shrimpCount = rawShrimp > 0 ? (Math.ceil(rawShrimp * 10) / 10).toFixed(1) : 0;
@@ -471,7 +459,6 @@
             const vegMushroom = (basinFive * 3) + (basinLarge * 2) + (basinSmall * 1) + (basinVegan * 1);
 
             let vegHtml = `
-                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">🦐 蝦子採購量</span><br><span class="font-bold text-amber" style="font-size:15px;">${shrimpCount} 斤</span></div>
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">高麗菜</span><br><span class="font-bold" style="font-size:15px;">${vegCabbage} g</span></div>
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">青江菜</span><br><span class="font-bold" style="font-size:15px;">${vegBokChoy} g</span></div>
                 <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">南瓜</span><br><span class="font-bold" style="font-size:15px;">${vegPumpkin} 片</span></div>
@@ -496,9 +483,15 @@
                     <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">芋頭</span><br><span class="font-bold" style="font-size:15px;">${vegTaro} 個</span></div>
                 `;
             }
+
+            // 接續在最後面，一般字體呈現
+            vegHtml += `
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">總菜盆數</span><br><span class="font-bold" style="font-size:15px;">${totalBasinCount} 個</span></div>
+                <div class="sub-card" style="margin-bottom:0;"><span class="text-xs">蝦子</span><br><span class="font-bold" style="font-size:15px;">${shrimpCount} 盒</span></div>
+            `;
+
             document.getElementById('vegetableList').innerHTML = vegHtml;
 
-            // 4. 下午茶與晚餐飲料
             const afCC = getAfternoonDrinkCC(todayGuests);
             const dnCC = getDinnerDrinkCC(todayGuests);
 
